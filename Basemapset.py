@@ -67,38 +67,13 @@ def BaseMapSet(Type, llon, rlon, llat, rlat):
     Base.drawcoastlines()
     Base.drawcountries()
     Base.drawmapboundary()
-    parallels = np.arange(-90, 90, 10)
+    parallels = np.arange(-90, 90, 0.07)
     Base.drawparallels(parallels,labels=[1,0,0,0],fontsize=10)
-    merid_values = np.arange(-180, 180., 10)
+    merid_values = np.arange(-180, 180., 0.1)
     meridians = Base.drawmeridians(merid_values,labels=[0,0,0,1],fontsize=10)  
     
     return Base
 
-
-
-##Coordinates of the boundary of the targeted area
-llon, rlon = -97.5, -82.5
-llat, rlat = 27.5, 42.5
-Type = 'local' 
-Base = BaseMapSet(Type, llon, rlon, llat, rlat)
-
-#PDsub: Population Count of small square area in targeted area we specified before
-d_lat = 0.25
-d_lon = 0.25
-PDsub = np.zeros([int((rlat-llat)/0.25), int((rlon - llon)/0.25)])
-PDsub = PD[int(math.floor((llat-(-90))/d_lat)):int(math.floor((rlat-(-90))/d_lat)), int(math.floor((llon-(-180))/d_lon)):int(math.floor((rlon-(-180))/d_lon))]
-lon = np.arange(llon, rlon + d_lon, d_lon) #Set up the grid on our specified area and calculate the lat and lon of each square
-lat = np.arange(llat, rlat + d_lat, d_lat)
-
-#Transfer lon and Lat coordinates to state plane coordinates
-for i in range(len(lon)):
-    lon[i], temp = eq_map(lon[i], 0)
-
-for i in range(len(lat)):
-    temp, lat[i] = eq_map(0, lat[i])
-
-
-BaseMapSet('local', llon, rlon, llat, rlat)
 
 
 
