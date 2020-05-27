@@ -98,7 +98,7 @@ def neighbor2(sol, Geox, Geoy, T):
             Sol[Index][1] += Step
         elif(Temp == 3):
             Sol[Index][1] -= Step
-        if((Sol[Index][0] >= 0 and Sol[Index][0] <= (len(Geoy)-1)) and (Sol[Index][1] >= 0 and Sol[Index][1] <= (len(Geox)-1))):
+        if((Sol[Index][0] >= 1 and Sol[Index][0] <= (len(Geoy)-2)) and (Sol[Index][1] >= 1 and Sol[Index][1] <= (len(Geox)-2))):
             return Sol
         else:
             Sol = copy.deepcopy(sol)
@@ -149,13 +149,13 @@ def anneal2(sol, Type, Geox, Geoy, PD, Tractx, Tracty):
     while T > T_min:
         i = 0
         if(T > 0.7 and T <= 1):
-            Iter = 100
+            Iter = 10
         if(T <= 0.7 and T >= 0.3):
-            Iter = 200
+            Iter = 10
         if(T < 0.3 and T >= 0.2):
-            Iter = 1000
+            Iter = 10
         if(T < 0.2 and T >= 0.1):
-            Iter = 2000
+            Iter = 10
         while i <= Iter:
             new_sol = neighbor2(sol, Geox, Geoy, T)
             new_cost = cost(new_sol, Geox, Geoy, PD, Type, Tractx, Tracty)

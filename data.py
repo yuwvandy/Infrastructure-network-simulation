@@ -4,40 +4,57 @@ Created on Sat May 23 12:20:34 2020
 
 @author: 10624
 """
+##-------------------------------------Data for network data
+##Data for water network
+name1 = 'Water'
 
-#Data for water network
-name1 = 'water'
-name2 = 'power'
-name3 = 'gas'
-
-supply1 = 'pumping station'
-supply2 = 'power plant'
-supply3 = 'gas pumping station'
-
-transmission1 = 'storage tank'
-transmission2 = '12 or 23kv substation'
-transmission3 = 'intermediate station'
-
-demand1 = 'deliver station'
-demand2 = 'deliver station'
-demand3 = 'deliver station'
+supply1 = 'Pumping station'
+transmission1 = 'Storage tank'
+demand1 = 'Deliver Station'
 
 nodenum1 = 49
-nodenum2 = 50
-nodenum3 = 50
-
 supplynum1 = 9
-supplynum2 = 5
-supplynum3 = 5
-
 trannum1 = 6
-trannum2 = 15
-trannum3 = 15
-
 demandnum1 = 34
-demandnum2 = 30
-demandnum3 = 30
-
 color1 = 'blue'
+
+##Data for power network
+name2 = 'Power'
+
+supply2 = 'Power plant'
+transmission2 = '12 or 23kv substation'
+demand2 = 'Deliver station'
+
+nodenum2 = 60
+supplynum2 = 9
+trannum2 = 14
+demandnum2 = 37
 color2 = 'red'
+
+##Data for gas network
+name3 = 'Gas'
+supply3 = 'Gas pumping station'
+transmission3 = 'Intermediate station'
+demand3 = 'Deliver station'
+
+nodenum3 = 16
+supplynum3 = 3
+trannum3 = 7
+demandnum3 = 6
 color3 = 'green'
+
+
+
+##-------------------------------------Data for Basemap
+llon, rlon = -90.2, -89.6
+llat, rlat = 34.98, 35.4
+Type1 = 'local'
+
+Tractfile = r'Tract.xlsx'
+
+##-----------------------------------parameter for connecting networks
+num = 1
+
+##-----------------------------------data for generating networks using method in ouyangmin paper
+m = 3
+Type2 = 'Population'

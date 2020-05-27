@@ -83,7 +83,7 @@ def cumu(list1, list2):
     
     return list3
 
-def degreefit(Ndegree):
+def degreefit(Ndegree, a):
     """Given the unique list and frequency list, output the fitted result
     """
     list1, list2 = number2sequence(Ndegree)
@@ -91,9 +91,6 @@ def degreefit(Ndegree):
     list2 = np.array(list2)/np.sum(list2)
     list3 = np.array(cumu(list1, list2))
     list4 = []
-    
-    a = 9.34694
-    b = 2.89796 
     
     for i in range(len(list1)):
         list4.append(poisson(list1[i], a)) #Fit by matlab
@@ -116,8 +113,7 @@ def degreefit(Ndegree):
     plt.ylabel('The cumulative probability', fontsize = 15)
     plt.legend(framealpha=1, frameon=False, loc = 'upper left', fontsize = 15)
     
-    return list1, list2, list3, list4, list5, a, b
-
+    return list1, list2, list3, list4, list5
 
 
 
