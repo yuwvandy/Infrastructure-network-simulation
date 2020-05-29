@@ -59,6 +59,6 @@ num = 1
 ##-----------------------------------data for generating networks using method in ouyangmin paper
 m = 3
 Type2 = 'Population'
-wnodenum2, wsupplynum2 = 43, 9
-pnodenum2, psupplynum2 = 46, 9
-gnodenum2, gsupplynum2 = 9, 6
+wnodenum2, wsupplynum2, wdemandnum2 = 43, 9, 34
+pnodenum2, psupplynum2, pdemandnum2 = 46, 9, 37
+gnodenum2, gsupplynum2, gdemandnum2 = 9, 3, 6

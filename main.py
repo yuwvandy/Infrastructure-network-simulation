@@ -75,7 +75,7 @@ for i in range(len(Network_obj)):
     
     ##Calculate the network topology features
     Network.NPL()
-    Network. topo_efficiency_cal()
+    Network.topo_efficiency_cal()
     Network.efficiency_cal()
     Network.cluster_cal()
     Network.topo_diameter()
@@ -86,9 +86,9 @@ for i in range(len(Network_obj)):
     
 ###-------------------------------------------Network initialization2
 #location                                     
-Water2 = Network2('Water2', Geox, Geoy, dt.wnodenum2, dt.wsupplynum2, dt.supply1, dt.demand1, dt.color1)
-Power2 = Network2('Power2', Geox, Geoy, dt.pnodenum2, dt.psupplynum2, dt.supply2, dt.demand2, dt.color2)
-Gas2 = Network2('Gas2', Geox, Geoy, dt.gnodenum2, dt.gsupplynum2, dt.supply3, dt.demand3, dt.color3)
+Water2 = Network2('Water2', Geox, Geoy, dt.wnodenum2, dt.wsupplynum2, dt.wdemandnum2, dt.supply1, dt.demand1, dt.color1)
+Power2 = Network2('Power2', Geox, Geoy, dt.pnodenum2, dt.psupplynum2, dt.pdemandnum2, dt.supply2, dt.demand2, dt.color2)
+Gas2 = Network2('Gas2', Geox, Geoy, dt.gnodenum2, dt.gsupplynum2, dt.gdemandnum2, dt.supply3, dt.demand3, dt.color3)
 
 Network2object = [Water2, Power2, Gas2]
 for i in range(len(Network2object)):
@@ -100,8 +100,14 @@ for i in range(len(Network2object)):
     Network.degreeNdegree()
 #    Network.plotnetwork(dt.Type1, dt.llon, dt.rlon, dt.llat, dt.rlat)
     
+    ##Calculate the network topology features
+    Network.NPL()
+    Network.topo_efficiency_cal()
+    Network.efficiency_cal()
+    Network.cluster_cal()
+    Network.topo_diameter()
+    Network.spatial_diameter()
     Network.cost_cal(dt.Type2, Tract_pop, Tractx, Tracty)
-    
     
 
 

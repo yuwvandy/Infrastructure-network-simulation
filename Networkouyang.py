@@ -11,6 +11,7 @@ import numpy as np
 import Sharefunction as sf
 import Basemapset as bm
 import annealsimulation as ans
+from matplotlib import pyplot as plt
 
 
 class Network2:
@@ -58,15 +59,14 @@ class Network2:
         
         for i in range(len(self.loc)):
             for j in range(len(self.loc)):
-                self.distmatrix[i, j] = sf.dist(self.loc[i, 0], self.loc[i, 1], self.loc[j, 0], self.loc[j, 1])
+                self.distmatrix[i, j] = sf.dist(self.Geoloc[i, 0], self.Geoloc[i, 1], self.Geoloc[j, 0], self.Geoloc[j, 1])
         
         #Calculate the adjacent matrix
         self.adjmatrix = np.zeros([len(self.loc), len(self.loc)])
         
-        for i in range(len(self.distmatrix) - self.supplynum):
-            index = sorted(range(len(self.distmatrix[i + self.supplynum, :])), key=lambda k: self.distmatrix[i + self.supplynum, :][k])
-            self.adjmatrix[i + self.supplynum, index[0:m]] = 1
-            self.adjmatrix[index[0:m], i + self.supplynum] = 1
+        for i in range(len(self.demandseries)):
+            minindex = np.array(sf.minimumk(self.distmatrix[:self.demandseries[i], self.demandseries[i]], m))
+            self.adjmatrix[minindex, self.demandseries[i]] = 1
     
     def degreeNdegree(self):
         """Calculate the degree sequence and nodal neighborhood degree
@@ -120,11 +120,11 @@ class Network2:
     def NPL(self):
         """Calculate the normalized physical length of all edges in the network
         """
-        self.edge = np.zeros((np.sum(self.adjmatrix), 3))
+        self.edge = np.zeros((np.int(np.sum(self.adjmatrix)), 3))
         Temp = 0
         for i in range(self.nodenum):
             for j in range(self.nodenum):
-                if(self.self.adjmatrix[i, j] == 1):
+                if(self.adjmatrix[i, j] == 1):
                     self.edge[Temp, 0], self.edge[Temp, 1], self.edge[Temp, 2] = i, j, self.distmatrix[i, j]
                     Temp += 1
         
