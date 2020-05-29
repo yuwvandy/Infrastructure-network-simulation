@@ -48,6 +48,7 @@ color3 = 'green'
 ##-------------------------------------Data for Basemap
 llon, rlon = -90.2, -89.6
 llat, rlat = 34.98, 35.4
+d_lat, d_lon = 0.01, 0.01
 Type1 = 'local'
 
 Tractfile = r'Tract.xlsx'
@@ -58,3 +59,6 @@ num = 1
 ##-----------------------------------data for generating networks using method in ouyangmin paper
 m = 3
 Type2 = 'Population'
+wnodenum2, wsupplynum2 = 43, 9
+pnodenum2, psupplynum2 = 46, 9
+gnodenum2, gsupplynum2 = 9, 6

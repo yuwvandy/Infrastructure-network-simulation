@@ -17,6 +17,7 @@ import Tract
 import Sharefunction as sf
 import Randomlinknetwork as rn
 import annealsimulation as ans
+from Networkouyang import Network2
 
 #--------------------Set up the Basemap where all networks and systems are set up
 Base = bm.BaseMapSet(dt.Type1, dt.llon, dt.rlon, dt.llat, dt.rlat)
@@ -29,10 +30,11 @@ Tract.Pop_Visual(Tract_lat, Tract_lon, Tractx, Tracty, Tract_pop, Tract_area)
 #PDsub: Population Count of small square area in targeted area we specified before
 d_lat = 0.01
 d_lon = 0.01
-lon = np.arange(llon, rlon + d_lon, d_lon) #Set up the grid on our specified area and calculate the lat and lon of each square
-lat = np.arange(llat, rlat + d_lat, d_lat)
+lon = np.arange(dt.llon, dt.rlon + dt.d_lon, dt.d_lon) #Set up the grid on our specified area and calculate the lat and lon of each square
+lat = np.arange(dt.llat, dt.rlat + dt.d_lat, dt.d_lat)
 Geoy = np.zeros(len(lat))
 Geox = np.zeros(len(lon))
+
 #Transfer lon and Lat coordinates to state plane coordinates
 for i in range(len(lon)):
     Geox[i], temp = Base(lon[i], 0)
@@ -49,74 +51,59 @@ Gas = network(dt.name3, dt.supply3, dt.transmission3, dt.demand3, dt.nodenum3, d
 Network_obj = [Water, Power, Gas]
 
 ##For each of three networks: Water, Power, Gas
-for i in range(1):
+for i in range(len(Network_obj)):
     #Decision of facility location of three networks
     Network = Network_obj[i]
     Network.Nodelocation(Geox, Geoy, Tract_pop, Tractx, Tracty)
     Network.drawlocation(dt.Type1, llon, rlon, llat, rlat)
     Network.Distmatrix()
 
-for i in range(1):
-    Network = Network_obj[i]
     #Decision of network adjacent matrix of three networks
     while(1):
         Network.sampleseq = np.random.poisson(2.5333, size = Network.nodenum)
         if(Network.sampleseq.all() != 0):
-#            if(np.max(Network.sampleseq) >= 5):
-#                continue
+            #if(np.max(Network.sampleseq) >= 5):
+                #continue
             break
             
     Network.connection(Network.sampleseq, dt.num)
     Network.degree, Network.Ndegree = sf.degreeNdegree(Network.Adjmatrix)
+    
+    #Plot each single infrastructure network
+    Network.drawnetwork(dt.Type1, dt.llon, dt.rlon, dt.llat, dt.rlat)
+    #plt.savefig("{} network.png".format(Network.name), dpi = 2000)
+    
+    ##Calculate the network topology features
+    Network.NPL()
+    Network. topo_efficiency_cal()
+    Network.efficiency_cal()
+    Network.cluster_cal()
+    Network.topo_diameter()
+    Network.spatial_diameter()
+    Network.cost_cal(dt.Type2, Tract_pop, Tractx, Tracty)
+    
 
-##Plot the network
-for i in range(1):
-    Network = Network_obj[i]
-    Network.drawnetwork(dt.Type1, llon, rlon, llat, rlat)
-#    plt.savefig("Power network.png", dpi = 2000) 
     
 ###-------------------------------------------Network initialization2
-#location
-Water2loc = rn.Nodeloc(Geox, Geoy, 49)
-Water2geoloc = np.stack((Geoy[Water2loc[:, 0]], Geox[Water2loc[:, 1]])).transpose()
+#location                                     
+Water2 = Network2('Water2', Geox, Geoy, dt.wnodenum2, dt.wsupplynum2, dt.supply1, dt.demand1, dt.color1)
+Power2 = Network2('Power2', Geox, Geoy, dt.pnodenum2, dt.psupplynum2, dt.supply2, dt.demand2, dt.color2)
+Gas2 = Network2('Gas2', Geox, Geoy, dt.gnodenum2, dt.gsupplynum2, dt.supply3, dt.demand3, dt.color3)
 
-Power2loc = rn.Nodeloc(Geox, Geoy, 60)
-Power2geoloc = np.stack((Geoy[Power2loc[:, 0]], Geox[Power2loc[:, 1]])).transpose()
+Network2object = [Water2, Power2, Gas2]
+for i in range(len(Network2object)):
+    Network = Network2object[i]
+    
+    Network.Nodeloc()
+    Network.Connect(dt.m)
+    
+    Network.degreeNdegree()
+#    Network.plotnetwork(dt.Type1, dt.llon, dt.rlon, dt.llat, dt.rlat)
+    
+    Network.cost_cal(dt.Type2, Tract_pop, Tractx, Tracty)
+    
+    
 
-Gas2loc = rn.Nodeloc(Geox, Geoy, 16)
-Gas2geoloc = np.stack((Geoy[Gas2loc[:, 0]], Geox[Gas2loc[:, 1]])).transpose()
-
-#connection
-Water2distmatrix, Water2adjmatrix = rn.Connect(Water2geoloc, dt.m, Water.supplynum)
-Power2distmatrix, Power2adjmatrix = rn.Connect(Power2geoloc, dt.m, Power.supplynum)
-Gas2distmatrix, Gas2adjmatrix = rn.Connect(Gas2geoloc, dt.m, Gas.supplynum)
-
-#degree and nodal neighborhood degree
-Water2degree, Water2Ndegree = sf.degreeNdegree(Water2adjmatrix)
-Power2degree, Power2Ndegree = sf.degreeNdegree(Power2adjmatrix)
-Gas2degree, Gas2Ndegree = sf.degreeNdegree(Gas2adjmatrix)
-
-#Plot the network2
-Base = bm.BaseMapSet(dt.Type1, dt.llon, dt.rlon, dt.llat, dt.rlat)
-plotnetwork(Water2geoloc, Water.supplynum, Water.color, Water.supplyname, Water.demandname, Water2adjmatrix)
-
-Base = bm.BaseMapSet(dt.Type1, dt.llon, dt.rlon, dt.llat, dt.rlat)
-plotnetwork(Power2geoloc, Power.supplynum, Power.color, Power.supplyname, Power.demandname, Power2adjmatrix)
-
-Base = bm.BaseMapSet(dt.Type1, dt.llon, dt.rlon, dt.llat, dt.rlat)
-plotnetwork(Gas2geoloc, Gas.supplynum, Gas.color, Gas.supplyname, Gas.demandname,Gas2adjmatrix)
-
-
-#Calculate the cost
-Geox1 = sf.FeatureScaling(Geox)
-Geoy1 = sf.FeatureScaling(Geoy)
-Tract_pop1 = sf.FeatureScaling(Tract_pop)
-Tractx1 = sf.FeatureScaling(Tractx)
-Tracty1 = sf.FeatureScaling(Tracty)
-
-Water2cost = ans.cost(Water2loc[Water.supplynum:, :], Geox1, Geoy1, Tract_pop1, Type, Tractx1, Tracty1)
-Power2cost = ans.cost(Power2loc[Power.supplynum:, :], Geox1, Geoy1, Tract_pop1, Type, Tractx1, Tracty1)
-Gas2cost = ans.cost(Gas2loc[Gas.supplynum:, :], Geox1, Geoy1, Tract_pop1, Type, Tractx1, Tracty1)
 
 #Cost comparison
 plt.figure(figsize = (10, 6))

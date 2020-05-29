@@ -8,6 +8,7 @@ import Sharefunction as sf
 import numpy as np
 import Basemapset as bm
 from matplotlib import pyplot as plt
+import annealsimulation as ans
 
 class network:
     """Initiate the class of the network
@@ -397,6 +398,30 @@ class network:
                         Temp = min(distance)
         
         self.diameter = Temp
+        
+    def degreeNdegree(self):
+        """Calculate the degree sequence and nodal neighborhood degree
+        Visualize them as distributions
+        """
+        self.degree = np.sum(self.Adjmatrix, axis = 1)
+        self.Ndegree = np.zeros(len(self.degree), dtype = int)
+        for i in range(len(self.degree)):
+            Temp = 0
+            for j in range(len(self.degree)):
+                Temp += self.degree[j]*self.Adjmatrix[i, j]
+            self.Ndegree[i] = Temp
+            
+    def cost_cal(self, Type, Tract_pop, Tractx, Tracty):
+        """Calculate the normalized demand-population cost
+        """
+        Geox1 = sf.FeatureScaling(self.Geox)
+        Geoy1 = sf.FeatureScaling(self.Geoy)
+        Tract_pop1 = sf.FeatureScaling(Tract_pop)
+        Tractx1 = sf.FeatureScaling(Tractx)
+        Tracty1 = sf.FeatureScaling(Tracty)
+        
+        self.cost = ans.cost(self.demandloc, Geox1, Geoy1, Tract_pop1, Type, Tractx1, Tracty1)
+        
         
         
     
