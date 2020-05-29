@@ -49,30 +49,31 @@ Gas = network(dt.name3, dt.supply3, dt.transmission3, dt.demand3, dt.nodenum3, d
 Network_obj = [Water, Power, Gas]
 
 ##For each of three networks: Water, Power, Gas
-for i in range(len(Network_obj)):
+for i in range(1):
     #Decision of facility location of three networks
     Network = Network_obj[i]
     Network.Nodelocation(Geox, Geoy, Tract_pop, Tractx, Tracty)
     Network.drawlocation(dt.Type1, llon, rlon, llat, rlat)
     Network.Distmatrix()
 
-for i in range(len(Network_obj)):
+for i in range(1):
     Network = Network_obj[i]
     #Decision of network adjacent matrix of three networks
     while(1):
-        Network.sampleseq = np.random.poisson(2, size = Network.nodenum)
+        Network.sampleseq = np.random.poisson(2.5333, size = Network.nodenum)
         if(Network.sampleseq.all() != 0):
-            if(np.max(Network.sampleseq) >= 5):
-                continue
+#            if(np.max(Network.sampleseq) >= 5):
+#                continue
             break
             
     Network.connection(Network.sampleseq, dt.num)
     Network.degree, Network.Ndegree = sf.degreeNdegree(Network.Adjmatrix)
 
 ##Plot the network
-for i in range(len(Network_obj)):
+for i in range(1):
     Network = Network_obj[i]
     Network.drawnetwork(dt.Type1, llon, rlon, llat, rlat)
+#    plt.savefig("Power network.png", dpi = 2000) 
     
 ###-------------------------------------------Network initialization2
 #location
@@ -160,9 +161,6 @@ Power2list1, Power2list2, Power2list3, Power2list4, Power2list5 = degreefit(Powe
 Gas2para = 10.9375
 Gas2list1, Gas2list2, Gas2list3, Gas2list4, Gas2list5 = degreefit(Gas2Ndegree, Gas2para)
     
-
-
-
 
 
 
