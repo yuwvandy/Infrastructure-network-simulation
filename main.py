@@ -29,8 +29,6 @@ Tract.Pop_Visual(Tract_lat, Tract_lon, Tractx, Tracty, Tract_pop, Tract_area)
 
 
 #PDsub: Population Count of small square area in targeted area we specified before
-d_lat = 0.01
-d_lon = 0.01
 lon = np.arange(dt.llon, dt.rlon + dt.d_lon, dt.d_lon) #Set up the grid on our specified area and calculate the lat and lon of each square
 lat = np.arange(dt.llat, dt.rlat + dt.d_lat, dt.d_lat)
 Geoy = np.zeros(len(lat))
@@ -43,33 +41,21 @@ for i in range(len(lon)):
 for i in range(len(lat)):
     temp, Geoy[i] = Base(0, lat[i])
 
-Wtopo_eff1, Wtopo_eff2 = [], []
-Ptopo_eff1, Ptopo_eff2 = [], []
-Gtopo_eff1, Gtopo_eff2 = [], []
+topo_eff1, topo_eff2 = [[], [], []], [[], [], []]
 
-Weff1, Weff2 = [], []
-Peff1, Peff2 = [], []
-Geff1, Geff2 = [], []
+eff1, eff2 = [[], [], []], [[], [], []]
 
-Wcluster_coeff1, Wcluster_coeff2 = [], []
-Pcluster_coeff1, Pcluster_coeff2 = [], []
-Gcluster_coeff1, Gcluster_coeff2 = [], []
+cluster_coeff1, cluster_coeff2 = [[], [], []], [[], [], []]
 
-Wtopodiameter1, Wtopodiameter2 = [], []
-Ptopodiameter1, Ptopodiameter2 = [], []
-Gtopodiameter1, Gtopodiameter2 = [], []
+topodiameter1, topodiameter2 = [[], [], []], [[], [], []]
 
-Wdiameter1, Wdiameter2 = [], []
-Pdiameter1, Pdiameter2 = [], []
-Gdiameter1, Gdiameter2 = [], []
+diameter1, diameter2 = [[], [], []], [[], [], []]
 
-Wcost1, Wcost2 = [], []
-Pcost1, Pcost2 = [], []
-Gcost1, Gcost2 = [], []
-
+cost1, cost2 = [[], [], []], [[], [], []]
+    
 #----------------------------------------------------Network initialization
 Temp = 0
-while(Temp <= 50):
+while(Temp <= 0):
     Water = network(dt.name1, dt.supply1, dt.transmission1, dt.demand1, dt.nodenum1, dt.supplynum1, dt.trannum1, dt.demandnum1, dt.color1)
     Power = network(dt.name2, dt.supply2, dt.transmission2, dt.demand2, dt.nodenum2, dt.supplynum2, dt.trannum2, dt.demandnum2, dt.color2)
     Gas = network(dt.name3, dt.supply3, dt.transmission3, dt.demand3, dt.nodenum3, dt.supplynum3, dt.trannum3, dt.demandnum3, dt.color3)
@@ -100,13 +86,15 @@ while(Temp <= 50):
         #plt.savefig("{} network.png".format(Network.name), dpi = 2000)
         
         ##Calculate the network topology features
-        Network.NPL()
-        Network.topo_efficiency_cal()
-        Network.efficiency_cal()
-        Network.cluster_cal()
-        Network.topo_diameter()
-        Network.spatial_diameter()
+        Network.cal_topology_feature()
         Network.cost_cal(dt.Type2, Tract_pop, Tractx, Tracty)
+        
+        topo_eff1[i].append(Network.topo_efficiency)
+        eff1[i].append(Network.efficiency)
+        cluster_coeff1[i].append(Network.cluster_coeff)
+        topodiameter1[i].append(Network.topodiameter)
+        diameter1[i].append(Network.diameter)
+        cost1[i].append(Network.cost)
         
     
         
@@ -127,61 +115,15 @@ while(Temp <= 50):
     #    Network.plotnetwork(dt.Type1, dt.llon, dt.rlon, dt.llat, dt.rlat)
         
         ##Calculate the network topology features
-        Network.NPL()
-        Network.topo_efficiency_cal()
-        Network.efficiency_cal()
-        Network.cluster_cal()
-        Network.topo_diameter()
-        Network.spatial_diameter()
+        Network.cal_topology_feature()
         Network.cost_cal(dt.Type2, Tract_pop, Tractx, Tracty)
         
-    Wtopo_eff1.append(Water.topo_efficiency)
-    Ptopo_eff1.append(Power.topo_efficiency)
-    Gtopo_eff1.append(Gas.topo_efficiency)
-    
-    Wtopo_eff2.append(Water2.topo_efficiency)
-    Ptopo_eff2.append(Power2.topo_efficiency)
-    Gtopo_eff2.append(Gas2.topo_efficiency)
-    
-    Weff1.append(Water.efficiency)
-    Peff1.append(Power.efficiency)
-    Geff1.append(Gas.efficiency)
-    
-    Weff2.append(Water2.efficiency)
-    Peff2.append(Power2.efficiency)
-    Geff2.append(Gas2.efficiency)
-    
-    Wcluster_coeff1.append(Water.cluster_coeff)
-    Pcluster_coeff1.append(Power.cluster_coeff)
-    Gcluster_coeff1.append(Gas.cluster_coeff)
-    
-    Wcluster_coeff2.append(Water2.cluster_coeff)
-    Pcluster_coeff2.append(Power2.cluster_coeff)
-    Gcluster_coeff2.append(Gas2.cluster_coeff)
-    
-    Wtopodiameter1.append(Water.topodiameter)
-    Ptopodiameter1.append(Power.topodiameter)
-    Gtopodiameter1.append(Gas.topodiameter)
-    
-    Wtopodiameter2.append(Water2.topodiameter)
-    Ptopodiameter2.append(Power2.topodiameter)
-    Gtopodiameter2.append(Gas2.topodiameter)
-    
-    Wdiameter1.append(Water.diameter)
-    Pdiameter1.append(Power.diameter)
-    Gdiameter1.append(Gas.diameter)
-    
-    Wdiameter2.append(Water2.diameter)
-    Pdiameter2.append(Power2.diameter)
-    Gdiameter2.append(Gas2.diameter)
-    
-    Wcost1.append(Water.cost)
-    Pcost1.append(Power.cost)
-    Gcost1.append(Gas.cost)
-    
-    Wcost2.append(Water2.cost)
-    Pcost2.append(Power2.cost)
-    Gcost2.append(Gas2.cost)
+        topo_eff2[i].append(Network.topo_efficiency)
+        eff2[i].append(Network.efficiency)
+        cluster_coeff2[i].append(Network.cluster_coeff)
+        topodiameter2[i].append(Network.topodiameter)
+        diameter2[i].append(Network.diameter)
+        cost2[i].append(Network.cost)
     
     Temp += 1
     

@@ -79,9 +79,12 @@ def neighbor1(sol, Geox, Geoy, T, direc, step, c, Time):
 def neighbor2(sol, Geox, Geoy, T):
     """Explore the neighborhood of the current solution
     """
+#    initial_sol = copy.deepcopy(sol)
     Index = np.random.randint(0, len(sol))
     Sol = copy.deepcopy(sol)
+#    temp = 0
     while(1):
+#        temp += 1
         flag = 0
         
         if(T > 0.5):
@@ -105,9 +108,11 @@ def neighbor2(sol, Geox, Geoy, T):
             if(Sol[Index][0] == Sol[i][0] and Sol[Index][1] == Sol[i][1] and i != Index):
                 flag = 1
             
-        if((Sol[Index][0] >= 1 and Sol[Index][0] <= (len(Geoy)-2)) and (Sol[Index][1] >= 1 and Sol[Index][1] <= (len(Geox)-2)) and flag == 0):
+        if(Sol[Index][0] >= 1 and Sol[Index][0] <= (len(Geoy)-2) and Sol[Index][1] >= 1 and Sol[Index][1] <= (len(Geox)-2) and flag == 0):
             return Sol
         else:
+#            if(temp >= 1000):
+#                return initial_sol
             Sol = copy.deepcopy(sol)
             
 def acceptance_probability(old_cost, new_cost, T):

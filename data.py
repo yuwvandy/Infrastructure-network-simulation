@@ -6,6 +6,7 @@ Created on Sat May 23 12:20:34 2020
 """
 ##-------------------------------------Data for network data
 ##Data for water network
+
 name1 = 'Water'
 
 supply1 = 'Pumping station'

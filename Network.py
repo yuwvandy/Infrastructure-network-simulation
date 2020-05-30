@@ -428,7 +428,21 @@ class network:
         
         self.cost = ans.cost(self.demandloc, Geox1, Geoy1, Tract_pop1, Type, Tractx1, Tracty1)
         
-        
+    def cal_topology_feature(self):
+        """Calculate the topology features of the network
+        edge length
+        topo_efficiency
+        efficiency
+        cluster_coefficient
+        topology_ diameter
+        diameter
+        """
+        self.NPL()
+        self.topo_efficiency_cal()
+        self.efficiency_cal()
+        self.cluster_cal()
+        self.topo_diameter()
+        self.spatial_diameter()
         
     
     

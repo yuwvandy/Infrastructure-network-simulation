@@ -307,3 +307,19 @@ class Network2:
                         Temp = min(distance)
         
         self.diameter = Temp
+        
+    def cal_topology_feature(self):
+        """Calculate the topology features of the network
+        edge length
+        topo_efficiency
+        efficiency
+        cluster_coefficient
+        topology_ diameter
+        diameter
+        """
+        self.NPL()
+        self.topo_efficiency_cal()
+        self.efficiency_cal()
+        self.cluster_cal()
+        self.topo_diameter()
+        self.spatial_diameter()
