@@ -42,10 +42,17 @@ class Network2:
         Output: the interger location of the vertices
         """
         loc = []
-        for i in range(self.nodenum):
-            loc.append([np.random.randint(0, len(self.Geoy)), np.random.randint(0, len(self.Geox))])
         
-        self.loc = np.array(loc)
+        self.latl, self.lonl = [], []
+        
+        while(len(self.latl) != self.nodenum):
+            lat = np.random.randint(len(self.Geoy) - 1)
+            lon = np.random.randint(len(self.Geox) - 1)
+            if(lat not in self.latl or lon not in self.lonl):
+                self.latl.append(lat)
+                self.lonl.append(lon)   
+        
+        self.loc = np.stack((np.array(self.latl), np.array(self.lonl))).transpose()
         self.Geoloc = np.stack((self.Geoy[self.loc[:, 0]], self.Geox[self.loc[:, 1]])).transpose()
         
     def Connect(self, m):

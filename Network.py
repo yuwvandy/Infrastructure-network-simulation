@@ -42,14 +42,20 @@ class network:
         self.Geox = Geox
         self.Geoy = Geoy
         
-        self.demandlat = np.random.randint(len(Geoy) - 1, size = self.demandnum, dtype = int)
-        self.demandlon = np.random.randint(len(Geox) - 1, size = self.demandnum, dtype = int)
+        self.latl, self.lonl = [], []
         
-        self.tranlat = np.random.randint(len(Geoy) - 1, size = self.trannum, dtype = int)
-        self.tranlon = np.random.randint(len(Geox) - 1, size = self.trannum, dtype = int)
+        while(len(self.latl) != self.nodenum):
+            lat = np.random.randint(len(self.Geoy) - 1)
+            lon = np.random.randint(len(self.Geox) - 1)
+            if(lat not in self.latl or lon not in self.lonl):
+                self.latl.append(lat)
+                self.lonl.append(lon)    
         
-        self.supplylat = np.random.randint(len(Geoy) - 1, size = self.supplynum, dtype = int)
-        self.supplylon = np.random.randint(len(Geox) - 1, size = self.supplynum, dtype = int)
+        self.latl, self.lonl = np.array(self.latl), np.array(self.lonl)
+            
+        self.demandlat, self.demandlon = self.latl[self.demandseries], self.lonl[self.demandseries]
+        self.tranlat, self.tranlon = self.latl[self.transeries], self.lonl[self.transeries]
+        self.supplylat, self.supplylon = self.latl[self.supplyseries], self.lonl[self.supplyseries]
         
         self.demandloc = np.stack((self.demandlat, self.demandlon)).transpose()
         self.tranloc = np.stack((self.tranlat, self.tranlon)).transpose()
@@ -62,20 +68,20 @@ class network:
         Tractx1 = sf.FeatureScaling(Tractx)
         Tracty1 = sf.FeatureScaling(Tracty)
         
-        self.demandloc, self.demandc = annealsimulation.anneal2(self.demandloc, 'Population', Geox1, Geoy1, Tract_pop1, Tractx1, Tracty1)
+        self.demandloc, self.demandc = ans.anneal2(self.demandloc, 'Population', Geox1, Geoy1, Tract_pop1, Tractx1, Tracty1)
         self.demandy1 = Geoy1[self.demandloc[:, 0]]
         self.demandx1 = Geox1[self.demandloc[:, 1]]
         self.demandy = Geoy[self.demandloc[:, 0]]
         self.demandx = Geox[self.demandloc[:, 1]]
         #Transmission node
-        self.tranloc, self.tranc = annealsimulation.anneal2(self.tranloc, 'Facility', Geox1, Geoy1, Tract_pop1, self.demandx1, self.demandy1)
+        self.tranloc, self.tranc = ans.anneal2(self.tranloc, 'Facility', Geox1, Geoy1, Tract_pop1, self.demandx1, self.demandy1)
         self.trany1 = Geoy1[self.tranloc[:, 0]]
         self.tranx1 = Geox1[self.tranloc[:, 1]]
         self.trany = Geoy[self.tranloc[:, 0]]
         self.tranx = Geox[self.tranloc[:, 1]]
 
         #Supply node
-        self.supplyloc, self.supplyc = annealsimulation.anneal2(self.supplyloc, 'Facility', Geox1, Geoy1, Tract_pop1, self.tranx1, self.trany1)
+        self.supplyloc, self.supplyc = ans.anneal2(self.supplyloc, 'Facility', Geox1, Geoy1, Tract_pop1, self.tranx1, self.trany1)
         self.supplyy1 = Geoy1[self.supplyloc[:, 0]]
         self.supplyx1 = Geox1[self.supplyloc[:, 1]]    
         self.supplyy = Geoy[self.supplyloc[:, 0]]
@@ -158,7 +164,7 @@ class network:
 ##            self.Adjmatrix[self.transeries[i], minindex] = 1
 #        
         for i in range(self.trannum):
-            minindex = np.array(sf.minimumk(self.Dismatrix[self.transeries[i], self.demandseries], sampleseq[self.transeries[i]])) + self.supplynum + self.trannum
+            minindex = np.array(sf.minimumk(self.Dismatrix[self.transeries[i], self.demandseries], min(sampleseq[self.transeries[i]], self.demandnum))) + self.supplynum + self.trannum
             self.Adjmatrix[self.transeries[i], minindex] = 1
 #            self.Adjmatrix[minindex, self.transeries[i]] = 1
             
@@ -178,7 +184,7 @@ class network:
 #            self.Adjmatrix[self.demandseries[i], minindex] = 1
         
         for i in range(self.demandnum):
-            minindex = np.array(sf.minimumk(self.Dismatrix[self.demandseries[i], self.demandseries], sampleseq[self.demandseries[i]] + 1)) + self.supplynum + self.trannum
+            minindex = np.array(sf.minimumk(self.Dismatrix[self.demandseries[i], self.demandseries], min(sampleseq[self.demandseries[i]] + 1, self.demandnum))) + self.supplynum + self.trannum
             minindex = minindex[1:-1]
             self.Adjmatrix[self.demandseries[i], minindex] = 1
 #            self.Adjmatrix[minindex, self.demandseries[i]] = 1

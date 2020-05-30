@@ -82,6 +82,8 @@ def neighbor2(sol, Geox, Geoy, T):
     Index = np.random.randint(0, len(sol))
     Sol = copy.deepcopy(sol)
     while(1):
+        flag = 0
+        
         if(T > 0.5):
             Step = np.random.randint(0, 6)
         if(T <= 0.5 and T > 0.3):
@@ -98,7 +100,12 @@ def neighbor2(sol, Geox, Geoy, T):
             Sol[Index][1] += Step
         elif(Temp == 3):
             Sol[Index][1] -= Step
-        if((Sol[Index][0] >= 1 and Sol[Index][0] <= (len(Geoy)-2)) and (Sol[Index][1] >= 1 and Sol[Index][1] <= (len(Geox)-2))):
+            
+        for i in range(len(Sol)): ##ensure not repeat facility (no co-location)
+            if(Sol[Index][0] == Sol[i][0] and Sol[Index][1] == Sol[i][1] and i != Index):
+                flag = 1
+            
+        if((Sol[Index][0] >= 1 and Sol[Index][0] <= (len(Geoy)-2)) and (Sol[Index][1] >= 1 and Sol[Index][1] <= (len(Geox)-2)) and flag == 0):
             return Sol
         else:
             Sol = copy.deepcopy(sol)
@@ -153,9 +160,9 @@ def anneal2(sol, Type, Geox, Geoy, PD, Tractx, Tracty):
         if(T <= 0.7 and T >= 0.3):
             Iter = 200
         if(T < 0.3 and T >= 0.2):
-            Iter = 1000
+            Iter = 500
         if(T < 0.2 and T >= 0.1):
-            Iter = 2000
+            Iter = 1000
         while i <= Iter:
             new_sol = neighbor2(sol, Geox, Geoy, T)
             new_cost = cost(new_sol, Geox, Geoy, PD, Type, Tractx, Tracty)
