@@ -13,7 +13,7 @@ import annealsimulation as ans
 class network:
     """Initiate the class of the network
     """
-    def __init__(self, name, supplyname, tranname, demandname, nodenum, supplynum, trannum, demandnum, color):
+    def __init__(self, name, supplyname, tranname, demandname, nodenum, supplynum, trannum, demandnum, color, Geox, Geoy):
         
         self.name = name
         self.supplyname = supplyname
@@ -33,14 +33,13 @@ class network:
         
         
         self.color = color
+        self.Geox = Geox
+        self.Geoy = Geoy
     
-    def Nodelocation(self, Geox, Geoy, Tract_pop, Tractx, Tracty):
+    def Nodelocation(self, Tract_pop, Tractx, Tracty):
         """Annealing simulation to decide the node location
         """
         import annealsimulation
-        
-        self.Geox = Geox
-        self.Geoy = Geoy
         
         self.latl, self.lonl = [], []
         
@@ -62,8 +61,8 @@ class network:
         self.supplyloc = np.stack((self.supplylat, self.supplylon)).transpose()
         
         #Demand node
-        Geox1 = sf.FeatureScaling(Geox)
-        Geoy1 = sf.FeatureScaling(Geoy)
+        Geox1 = sf.FeatureScaling(self.Geox)
+        Geoy1 = sf.FeatureScaling(self.Geoy)
         Tract_pop1 = sf.FeatureScaling(Tract_pop)
         Tractx1 = sf.FeatureScaling(Tractx)
         Tracty1 = sf.FeatureScaling(Tracty)
@@ -71,21 +70,21 @@ class network:
         self.demandloc, self.demandc = ans.anneal2(self.demandloc, 'Population', Geox1, Geoy1, Tract_pop1, Tractx1, Tracty1)
         self.demandy1 = Geoy1[self.demandloc[:, 0]]
         self.demandx1 = Geox1[self.demandloc[:, 1]]
-        self.demandy = Geoy[self.demandloc[:, 0]]
-        self.demandx = Geox[self.demandloc[:, 1]]
+        self.demandy = self.Geoy[self.demandloc[:, 0]]
+        self.demandx = self.Geox[self.demandloc[:, 1]]
         #Transmission node
         self.tranloc, self.tranc = ans.anneal2(self.tranloc, 'Facility', Geox1, Geoy1, Tract_pop1, self.demandx1, self.demandy1)
         self.trany1 = Geoy1[self.tranloc[:, 0]]
         self.tranx1 = Geox1[self.tranloc[:, 1]]
-        self.trany = Geoy[self.tranloc[:, 0]]
-        self.tranx = Geox[self.tranloc[:, 1]]
+        self.trany = self.Geoy[self.tranloc[:, 0]]
+        self.tranx = self.Geox[self.tranloc[:, 1]]
 
         #Supply node
         self.supplyloc, self.supplyc = ans.anneal2(self.supplyloc, 'Facility', Geox1, Geoy1, Tract_pop1, self.tranx1, self.trany1)
         self.supplyy1 = Geoy1[self.supplyloc[:, 0]]
         self.supplyx1 = Geox1[self.supplyloc[:, 1]]    
-        self.supplyy = Geoy[self.supplyloc[:, 0]]
-        self.supplyx = Geox[self.supplyloc[:, 1]]
+        self.supplyy = self.Geoy[self.supplyloc[:, 0]]
+        self.supplyx = self.Geox[self.supplyloc[:, 1]]
         
         ##Coordinates of nodes
         self.y = np.concatenate((self.supplyy, self.trany, self.demandy))

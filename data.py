@@ -44,6 +44,8 @@ trannum3 = 7
 demandnum3 = 6
 color3 = 'green'
 
+fitdegree = [2.89796, 2.53333, 2.125]
+
 
 
 ##-------------------------------------Data for Basemap
@@ -63,3 +65,8 @@ Type2 = 'Population'
 wnodenum2, wsupplynum2, wdemandnum2 = 43, 9, 34
 pnodenum2, psupplynum2, pdemandnum2 = 46, 9, 37
 gnodenum2, gsupplynum2, gdemandnum2 = 9, 3, 6
+
+##---------------------------------data for the real Shleby County networks
+WNpath, WEpath = "WaterNodes.xlsx", "WaterEdges.xlsx"
+PNpath, PEpath = "PowerNodes.xlsx", "PowerEdges.xlsx"
+GNpath, GEpath = "GasNodes.xlsx", "GasEdges.xlsx"

@@ -11,28 +11,151 @@ Created on Mon May 25 14:20:46 2020
 
 @author: wany105
 """
-WN = pd.read_excel (r'C:\Users\wany105\OneDrive - Vanderbilt\Research\ShelbyCounty_DataRead\WaterNodes.xlsx') #for an earlier version of Excel, you may need to use the file extension of 'xls'
-WE = pd.read_excel (r'C:\Users\wany105\OneDrive - Vanderbilt\Research\ShelbyCounty_DataRead\WaterEdges.xlsx') #for an earlier version of Excel, you may need to use the file extension of 'xls'
-PN = pd.read_excel (r'C:\Users\wany105\OneDrive - Vanderbilt\Research\ShelbyCounty_DataRead\PowerNodes.xlsx') #for an earlier version of Excel, you may need to use the file extension of 'xls'
-PE = pd.read_excel (r'C:\Users\wany105\OneDrive - Vanderbilt\Research\ShelbyCounty_DataRead\PowerEdges.xlsx') #for an earlier version of Excel, you may need to use the file extension of 'xls'
-GN = pd.read_excel (r'C:\Users\wany105\OneDrive - Vanderbilt\Research\ShelbyCounty_DataRead\GasNodes.xlsx') #for an earlier version of Excel, you may need to use the file extension of 'xls'
-GE = pd.read_excel (r'C:\Users\wany105\OneDrive - Vanderbilt\Research\ShelbyCounty_DataRead\GasEdges.xlsx') #for an earlier version of Excel, you may need to use the file extension of 'xls'
+import Basemapset as bm
+import data as dt
+from Network import network
+from matplotlib import pyplot as plt
+import math
+import numpy as np
 
-Wlat, Wlon, Wtype = np.array(WN["Lat"]), np.array(WN["Long"]), np.array(WN["NODE CLASS"])
-Plat, Plon, Ptype = np.array(PN["Lat"]), np.array(PN["Long"]), np.array(PN["NODE CLASS"])
-Glat, Glon, Gtype = np.array(GN["Lat"]), np.array(GN["Long"]), np.array(GN["NODE CLASS"])
+def read(Npath, Epath):
+    """Read the .xlsx files and get the node and edge lists
+    """
+    N, E = pd.read_excel(Npath), pd.read_excel(Epath)
+    
+    return N, E
 
-Wateredge = np.stack((np.array(WE["START WATER NODE ID"]) - 1, np.array(WE["END WATER NODE ID"]) - 1)).transpose()
-Poweredge = np.stack((np.array(PE["START POWER NODE ID"]) - 1, np.array(PE["END POWER NODE ID"]) - 1)).transpose()
-Gasedge = np.stack((np.array(GE["START GAS NODE ID"]) - 1, np.array(GE["END GAS NODE ID"]) - 1)).transpose()
+def latlontypenumedge(N, E, name1, name2):
+    """Read the node and edge lists, get the latitude, longitude, nodenumber and node type
+    """
+    lat, lon = np.array(N["Lat"]), np.array(N["Long"])
+    Type = np.array(N["NODE CLASS"])
+    num = len(lat)
+    
+    edge = np.stack((np.array(E[name1]) - 1, np.array(E[name2]) - 1)).transpose()
+    
+    return lat, lon, Type, num, edge
+
+def latlon2XY(lat, lon, Base):
+    """Transform the latitude and longitude to the X and Y
+    """
+    
+    X, Y = Base(lon, lat)
+    
+    return X, Y
+
+def supplytrandemandnum(Type, name1, name2, name3, num):
+    """Calculate the number of supply nodes, transmission nodes and demand nodes
+    """
+    supply, transmission, demand = 0, 0, 0
+    
+    for i in range(num):
+        if(Type[i] == name1):
+            supply += 1
+        if(Type[i] == name2):
+            transmission += 1
+        if(Type[i] == name3):
+            demand += 1
+            
+    return supply, transmission, demand
+
+def supplytrandemandxy(Network):
+    """Calculate the the xy of the supply, demand and transmission nodes
+    """
+    Network.demandx, Network.demandy = Network.x[Network.demandseries], Network.y[Network.demandseries]
+    Network.tranx, Network.trany = Network.x[Network.transeries], Network.y[Network.transeries]
+    Network.supplyx, Network.supplyy = Network.x[Network.supplyseries], Network.y[Network.supplyseries]
+
+def Adjmatrix(Network, edge):
+    """Calculate the adjacent matrix of the given network
+    """
+    Network.Adjmatrix = np.zeros((Network.nodenum, Network.nodenum), dtype = int)
+    for i in range(len(edge)):
+        Network.Adjmatrix[edge[i, 0], edge[i, 1]] = 1
+        
+def cost(Network, Tract_pop, Tractx, Tracty):
+    """Calculate the overall cost all a new solution: two type: demand-population, supply-transmission(transmission-demand)
+    """
+    x = sf.FeatureScaling(Network.demandx)
+    y = sf.FeatureScaling(Network.demandy)
+    Tract_pop1 = sf.FeatureScaling(Tract_pop)
+    Tractx1 = sf.FeatureScaling(Tractx)
+    Tracty1 = sf.FeatureScaling(Tracty)
+        
+    Sum_Cost = 0
+    for i in range(len(Tractx)):
+        Min_Dist = math.inf
+        for k in range(len(x)):
+            Dist = math.sqrt((Tracty1[i] - y[k])**2 + (Tractx1[i] - x[k])**2)
+            if(Dist < Min_Dist):
+                Min_Dist = Dist
+#                index = k
+        Sum_Cost += Min_Dist*Tract_pop1[i]
+                
+    Network.cost = Sum_Cost
+
+Wname = 'Swater'
+Pname = 'Spower'
+Gname = 'Sgas'
+
+
+WNpath, WEpath = r'WaterNodes.xlsx', r'WaterEdges.xlsx'
+PNpath, PEpath = r'PowerNodes.xlsx', r'PowerEdges.xlsx'
+GNpath, GEpath = r'GasNodes.xlsx', r'GasEdges.xlsx'
+
+WN, WE = read(WNpath, WEpath)
+PN, PE = read(PNpath, PEpath)
+GN, GE = read(GNpath, GEpath)
+
+Wlat, Wlon, WType, Wnum, Wedge = latlontypenumedge(WN, WE, "START WATER NODE ID", "END WATER NODE ID")
+Plat, Plon, PType, Pnum, Pedge = latlontypenumedge(PN, PE, "START POWER NODE ID", "END POWER NODE ID")
+Glat, Glon, GType, Gnum, Gedge = latlontypenumedge(GN, GE, "START GAS NODE ID", "END GAS NODE ID")
 
 plt.figure(figsize = (20, 12))
-Base = BaseMapSet('local')
+Base = bm.BaseMapSet(dt.Type1, dt.llon, dt.rlon, dt.llat, dt.rlat)
+WX, WY = latlon2XY(Wlat, Wlon, Base)
+PX, PY = latlon2XY(Plat, Plon, Base)
+GX, GY = latlon2XY(Glat, Glon, Base)
+
+Wsupply, Wtransmission, Wdemand = supplytrandemandnum(WType, dt.supply1, dt.transmission1, dt.demand1, Wnum)
+Psupply, Ptransmission, Pdemand = supplytrandemandnum(PType, dt.supply2, dt.transmission2, dt.demand2, Pnum)
+Gsupply, Gtransmission, Gdemand = supplytrandemandnum(GType, dt.supply3, dt.transmission3, dt.demand3, Gnum)
+
+Shelby_Water = network(Wname, dt.supply1, dt.transmission1, dt.demand1, Wnum, Wsupply, Wtransmission, Wdemand, dt.color1, Geox, Geoy)
+Shelby_Power = network(Pname, dt.supply2, dt.transmission2, dt.demand2, Pnum, Psupply, Ptransmission, Pdemand, dt.color2, Geox, Geoy)
+Shelby_Gas = network(Gname, dt.supply3, dt.transmission3, dt.demand3, Gnum, Gsupply, Gtransmission, Gdemand, dt.color3, Geox, Geoy)
+
+Shelby_Water.x, Shelby_Water.y = WX, WY
+Shelby_Power.x, Shelby_Power.y = PX, PY
+Shelby_Gas.x, Shelby_Gas.y = GX, GY
+
+supplytrandemandxy(Shelby_Water)
+supplytrandemandxy(Shelby_Power)
+supplytrandemandxy(Shelby_Gas)
+
+ShelbyNetwork = [Shelby_Water, Shelby_Power, Shelby_Gas]
+edge = [Wedge, Pedge, Gedge]
+
+for i in range(len(ShelbyNetwork)):
+    Network = ShelbyNetwork[i]
+    Network.Distmatrix()
+    Adjmatrix(Network, edge[i])
+    Network.degree, Network.Ndegree = sf.degreeNdegree(Network.Adjmatrix)
+    Network.drawnetwork(dt.Type1, dt.llon, dt.rlon, dt.llat, dt.rlat)
+    Network.cal_topology_feature()
+    cost(Network, Tract_pop, Tractx, Tracty)
+
+
+
+plt.figure(figsize = (20, 12))
+Base = bm.BaseMapSet(dt.Type1, dt.llon, dt.rlon, dt.llat, dt.rlat)
+
 Wx, Wy = Base(Wlon, Wlat)
 Px, Py = Base(Plon, Plat)
 Gx, Gy = Base(Glon, Glat)
 
 ##Water network
+Wnum = len(Wlat)
 Wxs, Wxm, Wxd = [], [], []
 Wys, Wym, Wyd = [], [], []
 for i in range(len(Wx)):
@@ -45,6 +168,10 @@ for i in range(len(Wx)):
     if(Wtype[i] == "Delivery Nodes"):
         Wxd.append(Wx[i])
         Wyd.append(Wy[i])
+        
+#Distance and adjacent matrix
+Wadjmatrix, Wdistmatrix = np.zeros((Wnum, ))
+for i in range(len())
         
 plt.scatter(Wxs, Wys, 400, 'blue' , marker = '+', label = 'Pumping station')        
 plt.scatter(Wxm, Wym, 200, 'blue', marker = '*', label = 'Storage tank')        
@@ -109,4 +236,7 @@ plt.scatter(Gxd, Gyd, 100, 'green', marker = 'o', label = 'Deliver Station')
 for j in range(len(Gasedge)):
     plt.plot([Gx[Gasedge[j, 0]], Gx[Gasedge[j, 1]]], [Gy[Gasedge[j, 0]], Gy[Gasedge[j, 1]]], color = 'black')
 plt.legend(bbox_to_anchor=(0, 1), loc='upper left', ncol=1, fontsize = 15, frameon = 0)
+
+
+####Calculate the topological features
 

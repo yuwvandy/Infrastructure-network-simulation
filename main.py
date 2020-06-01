@@ -55,10 +55,10 @@ cost1, cost2 = [[], [], []], [[], [], []]
     
 #----------------------------------------------------Network initialization
 Temp = 0
-while(Temp <= 0):
-    Water = network(dt.name1, dt.supply1, dt.transmission1, dt.demand1, dt.nodenum1, dt.supplynum1, dt.trannum1, dt.demandnum1, dt.color1)
-    Power = network(dt.name2, dt.supply2, dt.transmission2, dt.demand2, dt.nodenum2, dt.supplynum2, dt.trannum2, dt.demandnum2, dt.color2)
-    Gas = network(dt.name3, dt.supply3, dt.transmission3, dt.demand3, dt.nodenum3, dt.supplynum3, dt.trannum3, dt.demandnum3, dt.color3)
+while(Temp <= 99):
+    Water = network(dt.name1, dt.supply1, dt.transmission1, dt.demand1, dt.nodenum1, dt.supplynum1, dt.trannum1, dt.demandnum1, dt.color1, Geox, Geoy)
+    Power = network(dt.name2, dt.supply2, dt.transmission2, dt.demand2, dt.nodenum2, dt.supplynum2, dt.trannum2, dt.demandnum2, dt.color2, Geox, Geoy)
+    Gas = network(dt.name3, dt.supply3, dt.transmission3, dt.demand3, dt.nodenum3, dt.supplynum3, dt.trannum3, dt.demandnum3, dt.color3, Geox, Geoy)
     
     Network_obj = [Water, Power, Gas]
     
@@ -66,13 +66,13 @@ while(Temp <= 0):
     for i in range(len(Network_obj)):
         #Decision of facility location of three networks
         Network = Network_obj[i]
-        Network.Nodelocation(Geox, Geoy, Tract_pop, Tractx, Tracty)
-        Network.drawlocation(dt.Type1, dt.llon, dt.rlon, dt.llat, dt.rlat)
+        Network.Nodelocation(Tract_pop, Tractx, Tracty)
+#        Network.drawlocation(dt.Type1, dt.llon, dt.rlon, dt.llat, dt.rlat)
         Network.Distmatrix()
     
         #Decision of network adjacent matrix of three networks
         while(1):
-            Network.sampleseq = np.random.poisson(2.5333, size = Network.nodenum)
+            Network.sampleseq = np.random.poisson(dt.fitdegree[i], size = Network.nodenum)
             if(Network.sampleseq.all() != 0):
                 #if(np.max(Network.sampleseq) >= 5):
                     #continue
@@ -82,7 +82,7 @@ while(Temp <= 0):
         Network.degree, Network.Ndegree = sf.degreeNdegree(Network.Adjmatrix)
         
         #Plot each single infrastructure network
-        Network.drawnetwork(dt.Type1, dt.llon, dt.rlon, dt.llat, dt.rlat)
+#        Network.drawnetwork(dt.Type1, dt.llon, dt.rlon, dt.llat, dt.rlat)
         #plt.savefig("{} network.png".format(Network.name), dpi = 2000)
         
         ##Calculate the network topology features
