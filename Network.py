@@ -329,7 +329,7 @@ class network:
             Node_num = len(neighborhood_node)
             Count = self.neighbor_edge(neighborhood_node)
             if(Node_num == 0 or Node_num == 1):
-                self.Cluster.append(1)
+                self.Cluster.append(0.5)
             else:
                 self.Cluster.append(Count/(Node_num*(Node_num - 1)))
         

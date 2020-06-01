@@ -19,6 +19,7 @@ import Randomlinknetwork as rn
 import annealsimulation as ans
 from Networkouyang import Network2
 import numpy as np
+import seaborn as sns
 
 #--------------------Set up the Basemap where all networks and systems are set up
 Base = bm.BaseMapSet(dt.Type1, dt.llon, dt.rlon, dt.llat, dt.rlat)
@@ -55,7 +56,7 @@ cost1, cost2 = [[], [], []], [[], [], []]
     
 #----------------------------------------------------Network initialization
 Temp = 0
-while(Temp <= 99):
+while(Temp <= 10):
     Water = network(dt.name1, dt.supply1, dt.transmission1, dt.demand1, dt.nodenum1, dt.supplynum1, dt.trannum1, dt.demandnum1, dt.color1, Geox, Geoy)
     Power = network(dt.name2, dt.supply2, dt.transmission2, dt.demand2, dt.nodenum2, dt.supplynum2, dt.trannum2, dt.demandnum2, dt.color2, Geox, Geoy)
     Gas = network(dt.name3, dt.supply3, dt.transmission3, dt.demand3, dt.nodenum3, dt.supplynum3, dt.trannum3, dt.demandnum3, dt.color3, Geox, Geoy)
@@ -127,6 +128,39 @@ while(Temp <= 99):
     
     Temp += 1
     
+#Compare several features of networks genering using different methods and original networks
+##Cost: demand - population
+sf.plotdistcompare([cost1[0], 'royalblue', 'Method 1', 'Cost'], [cost2[0], 'deepskyblue', 'Method 2', 'Cost'], [[Shelby_Water.cost]*2, [0, 1.4], 'blue'])
+sf.plotdistcompare([cost1[1], 'maroon', 'Method 1', 'Cost'], [cost2[1], 'darkorange', 'Method 2', 'Cost'], [[Shelby_Power.cost]*2, [0, 1.4], 'red'])
+sf.plotdistcompare([cost1[2], 'darkgreen', 'Method 1', 'Cost'], [cost2[2], 'lime', 'Method 2', 'Cost'],  [[Shelby_Gas.cost]*2, [0, 1.4], 'green'])
+Wcost1_ave, Pcost1_ave, Gcost1_ave = np.mean(cost1[0]), np.mean(cost1[1]), np.mean(cost1[2])
+Wcost2_ave, Pcost2_ave, Gcost2_ave = np.mean(cost2[0]), np.mean(cost2[1]), np.mean(cost2[2])
+
+
+sf.plotdistcompare([cluster_coeff1[0], 'royalblue', 'Method 1', 'Cluster coefficient'], [cluster_coeff2[0], 'deepskyblue', 'Method 2', 'Cluster coefficient'], [[Shelby_Water.cluster_coeff]*2, [0, 14], 'blue'])
+sf.plotdistcompare([cluster_coeff1[1], 'maroon', 'Method 1', 'Cluster coefficient'], [cluster_coeff2[1], 'darkorange', 'Method 2', 'Cluster coefficient'], [[Shelby_Power.cluster_coeff]*2, [0, 14], 'red'])
+sf.plotdistcompare([cluster_coeff1[2], 'darkgreen', 'Method 1', 'Cluster coefficient'], [cluster_coeff2[2], 'lime', 'Method 2', 'Cluster coefficient'],  [[Shelby_Gas.cluster_coeff]*2, [0, 6], 'green'])
+Wcluster_coeff1_ave, Pcluster_coeff1_ave, Gcluster_coeff1_ave = np.mean(cost1[0]), np.mean(cost1[1]), np.mean(cost1[2])
+Wcost2_ave, Pcost2_ave, Gcluster_coeff2_ave = np.mean(cost2[0]), np.mean(cost2[1]), np.mean(cost2[2])
+
+
+sf.plotdistcompare([eff1_noinf[0], 'royalblue', 'Method 1', 'Spatial efficiency'], [eff2[0], 'deepskyblue', 'Method 2', 'Spatial efficiency'], [[Shelby_Water.efficiency]*2, [0, 160], 'blue'])
+sf.plotdistcompare([eff1_noinf[1], 'maroon', 'Method 1', 'Spatial efficiency'], [eff2[1], 'darkorange', 'Method 2', 'Spatial efficiency'], [[Shelby_Power.efficiency]*2, [0, 140], 'red'])
+sf.plotdistcompare([eff1_noinf[2], 'darkgreen', 'Method 1', 'Spatial efficiency'], [eff2[2], 'lime', 'Method 2', 'Spatial efficiency'],  [[Shelby_Gas.efficiency]*2, [0, 50], 'green'])
+
+sf.plotdistcompare([topo_eff1[0], 'royalblue', 'Method 1', 'Topological efficiency'], [topo_eff2[0], 'deepskyblue', 'Method 2', 'Topological efficiency'], [[Shelby_Water.topo_efficiency]*2, [0, 25], 'blue'])
+sf.plotdistcompare([topo_eff1[1], 'maroon', 'Method 1', 'Topological efficiency'], [topo_eff2[1], 'darkorange', 'Method 2', 'Topological efficiency'], [[Shelby_Power.topo_efficiency]*2, [0, 25], 'red'])
+sf.plotdistcompare([topo_eff1[2], 'darkgreen', 'Method 1', 'Topological efficiency'], [topo_eff2[2], 'lime', 'Method 2', 'Topological efficiency'],  [[Shelby_Gas.topo_efficiency]*2, [0, 6], 'green'])
+
+sf.plotdistcompare([diameter1[0], 'royalblue', 'Method 1', 'Spatial diameter'], [diameter2[0], 'deepskyblue', 'Method 2', 'Spatial diameter'], [[Shelby_Water.diameter]*2, [0, 0.035], 'blue'])
+sf.plotdistcompare([diameter1[1], 'maroon', 'Method 1', 'Spatial diameter'], [diameter2[1], 'darkorange', 'Method 2', 'Spatial diameter'], [[Shelby_Power.diameter]*2, [0, 0.035], 'red'])
+sf.plotdistcompare([diameter1[2], 'darkgreen', 'Method 1', 'Spatial diameter'], [diameter2[2], 'lime', 'Method 2', 'Spatial diameter'],  [[Shelby_Gas.diameter]*2, [0, 0.035], 'green'])
+
+sf.plotdistcompare([topodiameter1[0], 'royalblue', 'Method 1', 'Topological diameter'], [topodiameter2[0], 'deepskyblue', 'Method 2', 'Topological diameter'], [[Shelby_Water.topodiameter]*2, [0, 0.4], 'blue'])
+sf.plotdistcompare([topodiameter1[1], 'maroon', 'Method 1', 'Topological diameter'], [topodiameter2[1], 'darkorange', 'Method 2', 'Topological diameter'], [[Shelby_Power.topodiameter]*2, [0, 1.0], 'red'])
+sf.plotdistcompare([topodiameter1[2], 'darkgreen', 'Method 1', 'Topological diameter'], [topodiameter2[2], 'lime', 'Method 2', 'Topological diameter'],  [[Shelby_Gas.topodiameter]*2, [0, 1.0], 'green'])
+
+
 
 
 #Cost comparison

@@ -44,7 +44,9 @@ trannum3 = 7
 demandnum3 = 6
 color3 = 'green'
 
-fitdegree = [2.89796, 2.53333, 2.125]
+fitdegree = [2.85714, 2.53333, 2.25]
+#fitdegree single edge in Shelby County
+#fitdegree = [1.42857, 1.25, 1.125]
 
 
 

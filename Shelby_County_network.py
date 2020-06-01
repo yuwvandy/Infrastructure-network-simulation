@@ -15,6 +15,7 @@ import Basemapset as bm
 import data as dt
 from Network import network
 from matplotlib import pyplot as plt
+import Sharefunction as sf
 import math
 import numpy as np
 
@@ -66,18 +67,20 @@ def supplytrandemandxy(Network):
     Network.tranx, Network.trany = Network.x[Network.transeries], Network.y[Network.transeries]
     Network.supplyx, Network.supplyy = Network.x[Network.supplyseries], Network.y[Network.supplyseries]
 
-def Adjmatrix(Network, edge):
+def Adjmatrix(Network, edge, Type):
     """Calculate the adjacent matrix of the given network
     """
     Network.Adjmatrix = np.zeros((Network.nodenum, Network.nodenum), dtype = int)
     for i in range(len(edge)):
         Network.Adjmatrix[edge[i, 0], edge[i, 1]] = 1
+        if(Type[edge[i, 0]] == Type[edge[i, 1]]):
+            Network.Adjmatrix[edge[i, 1], edge[i, 0]] = 1
         
-def cost(Network, Tract_pop, Tractx, Tracty):
+def cost(Network, Tract_pop, Tractx, Tracty, Geox, Geoy):
     """Calculate the overall cost all a new solution: two type: demand-population, supply-transmission(transmission-demand)
     """
-    x = sf.FeatureScaling(Network.demandx)
-    y = sf.FeatureScaling(Network.demandy)
+    x = sf.FeatureScaling2(Network.demandx, np.min(Geox), np.max(Geox) - np.min(Geox))
+    y = sf.FeatureScaling2(Network.demandy, np.min(Geoy), np.max(Geoy) - np.min(Geoy))
     Tract_pop1 = sf.FeatureScaling(Tract_pop)
     Tractx1 = sf.FeatureScaling(Tractx)
     Tracty1 = sf.FeatureScaling(Tracty)
@@ -125,9 +128,9 @@ Shelby_Water = network(Wname, dt.supply1, dt.transmission1, dt.demand1, Wnum, Ws
 Shelby_Power = network(Pname, dt.supply2, dt.transmission2, dt.demand2, Pnum, Psupply, Ptransmission, Pdemand, dt.color2, Geox, Geoy)
 Shelby_Gas = network(Gname, dt.supply3, dt.transmission3, dt.demand3, Gnum, Gsupply, Gtransmission, Gdemand, dt.color3, Geox, Geoy)
 
-Shelby_Water.x, Shelby_Water.y = WX, WY
-Shelby_Power.x, Shelby_Power.y = PX, PY
-Shelby_Gas.x, Shelby_Gas.y = GX, GY
+Shelby_Water.x, Shelby_Water.y, Shelby_Water.Type = WX, WY, WType
+Shelby_Power.x, Shelby_Power.y, Shelby_Power.Type = PX, PY, PType
+Shelby_Gas.x, Shelby_Gas.y, Shelby_Gas.Type = GX, GY, GType
 
 supplytrandemandxy(Shelby_Water)
 supplytrandemandxy(Shelby_Power)
@@ -139,11 +142,11 @@ edge = [Wedge, Pedge, Gedge]
 for i in range(len(ShelbyNetwork)):
     Network = ShelbyNetwork[i]
     Network.Distmatrix()
-    Adjmatrix(Network, edge[i])
+    Adjmatrix(Network, edge[i], Network.Type)
     Network.degree, Network.Ndegree = sf.degreeNdegree(Network.Adjmatrix)
     Network.drawnetwork(dt.Type1, dt.llon, dt.rlon, dt.llat, dt.rlat)
     Network.cal_topology_feature()
-    cost(Network, Tract_pop, Tractx, Tracty)
+    cost(Network, Tract_pop, Tractx, Tracty, Geox, Geoy)
 
 
 

@@ -10,9 +10,13 @@ This file contains function shared by all other program files. All functions her
 import numpy as np
 from matplotlib import pyplot as plt
 import Basemapset as bm
+import seaborn as sns
 
 def FeatureScaling(A):
     return ((A-np.min(A))/(np.max(A)-np.min(A)))
+
+def FeatureScaling2(A, min_val, sigma_val):
+    return ((A - min_val)/sigma_val)
 
 def dist(node1y, node1x, node2y, node2x):
     return ((node1y - node2y)**2+(node1x - node2x)**2)**0.5/1000 #m -> km
@@ -64,6 +68,24 @@ def plotnetwork(geoloc, supplynum, color, supplyname, demandname, adjmatrix):
 
     plt.legend(bbox_to_anchor=(1, 1), loc='upper left', ncol=1, fontsize = 25, frameon = 0)
     
+def plotdistcompare(list1, list2, list3):
+    """Plot the distributions of the two networks generated using different methods
+    Input: list1 - features of the network generated using the first method
+           list2 - features of the network generated using the second method
+           format: [data, color, label, axlabel, color]
+           list3 - x and y of the corresponding Shelby County system
+    """
+    sns.set_style("whitegrid")
+    sns.set_context("paper")
+    #plt.figure(figsize = (10, 6))
+    sns.distplot(list1[0], color = list1[1], label = list1[2], axlabel = list1[3], norm_hist = True, kde = True)
+    sns.distplot(list2[0], color = list2[1], label = list2[2], axlabel = list2[3], norm_hist = True, kde = True)
+    plt.plot(list3[0], list3[1], lw = 5, label = 'the Real network', color = list3[2])
+    plt.legend(bbox_to_anchor=(1, 1), loc='upper right', ncol=1, frameon = 0)
+
+    
+    
+
 #def decompose(degree, d):
 #    """Given the number of the total degree and the number of vertices, output the degree list
 #    """
