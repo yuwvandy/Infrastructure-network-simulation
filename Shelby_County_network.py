@@ -74,8 +74,9 @@ def Adjmatrix(Network, edge, Type):
     Network.Adjmatrix = np.zeros((Network.nodenum, Network.nodenum), dtype = int)
     for i in range(len(edge)):
         Network.Adjmatrix[edge[i, 0], edge[i, 1]] = 1
-        if(Type[edge[i, 0]] == Type[edge[i, 1]]):
-            Network.Adjmatrix[edge[i, 1], edge[i, 0]] = 1
+        Network.Adjmatrix[edge[i, 1], edge[i, 0]] = 1
+#        if(Type[edge[i, 0]] == Type[edge[i, 1]]):
+#            Network.Adjmatrix[edge[i, 1], edge[i, 0]] = 1
         
 def cost(Network, Tract_pop, Tractx, Tracty, Geox, Geoy):
     """Calculate the overall cost all a new solution: two type: demand-population, supply-transmission(transmission-demand)
@@ -147,7 +148,8 @@ for i in range(len(ShelbyNetwork)):
     Network.degree, Network.Ndegree = sf.degreeNdegree(Network.Adjmatrix)
     Network.drawnetwork(dt.Type1, dt.llon, dt.rlon, dt.llat, dt.rlat)
     Network.cal_topology_feature()
-    cost(Network, Tract_pop, Tractx, Tracty, Geox, Geoy)
+#    cost(Network, Tract_pop, Tractx, Tracty, Geox, Geoy)
+    cost(Network, Tract_density, Tractx, Tracty, Geox, Geoy)
 
 
 
