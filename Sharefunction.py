@@ -83,7 +83,18 @@ def plotdistcompare(list1, list2, list3):
     plt.plot(list3[0], list3[1], lw = 5, label = 'the Real network', color = list3[2])
     plt.legend(bbox_to_anchor=(1, 1), loc='upper right', ncol=1, frameon = 0)
 
+def Removeinf(list1):
+    """Remove the element of infinity value in the list1
+    """
+    import math
     
+    list2 = []
+    for i in range(len(list1)):
+        if(list1[i] == math.inf):
+            continue
+        list2.append(list1[i])
+    
+    return list2
     
 
 #def decompose(degree, d):

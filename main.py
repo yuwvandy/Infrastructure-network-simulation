@@ -127,38 +127,70 @@ while(Temp <= 10):
         cost2[i].append(Network.cost)
     
     Temp += 1
+
+
+##Remove the element of the infinity value in list network.efficiency
+eff1 = [sf.Removeinf(eff1[0]), sf.Removeinf(eff1[1]), sf.Removeinf(eff1[2])]    
     
 #Compare several features of networks genering using different methods and original networks
 ##Cost: demand - population
 sf.plotdistcompare([cost1[0], 'royalblue', 'Method 1', 'Cost'], [cost2[0], 'deepskyblue', 'Method 2', 'Cost'], [[Shelby_Water.cost]*2, [0, 1.4], 'blue'])
 sf.plotdistcompare([cost1[1], 'maroon', 'Method 1', 'Cost'], [cost2[1], 'darkorange', 'Method 2', 'Cost'], [[Shelby_Power.cost]*2, [0, 1.4], 'red'])
 sf.plotdistcompare([cost1[2], 'darkgreen', 'Method 1', 'Cost'], [cost2[2], 'lime', 'Method 2', 'Cost'],  [[Shelby_Gas.cost]*2, [0, 1.4], 'green'])
-Wcost1_ave, Pcost1_ave, Gcost1_ave = np.mean(cost1[0]), np.mean(cost1[1]), np.mean(cost1[2])
-Wcost2_ave, Pcost2_ave, Gcost2_ave = np.mean(cost2[0]), np.mean(cost2[1]), np.mean(cost2[2])
+cost1_ave = [np.mean(cost1[0]), np.mean(cost1[1]), np.mean(cost1[2])]
+cost1_std = [np.std(cost1[0]), np.std(cost1[1]), np.std(cost1[2])]
+cost2_ave = [np.mean(cost2[0]), np.mean(cost2[1]), np.mean(cost2[2])]
+cost2_std = [np.std(cost2[0]), np.std(cost2[1]), np.std(cost2[2])]
 
 
 sf.plotdistcompare([cluster_coeff1[0], 'royalblue', 'Method 1', 'Cluster coefficient'], [cluster_coeff2[0], 'deepskyblue', 'Method 2', 'Cluster coefficient'], [[Shelby_Water.cluster_coeff]*2, [0, 14], 'blue'])
 sf.plotdistcompare([cluster_coeff1[1], 'maroon', 'Method 1', 'Cluster coefficient'], [cluster_coeff2[1], 'darkorange', 'Method 2', 'Cluster coefficient'], [[Shelby_Power.cluster_coeff]*2, [0, 14], 'red'])
 sf.plotdistcompare([cluster_coeff1[2], 'darkgreen', 'Method 1', 'Cluster coefficient'], [cluster_coeff2[2], 'lime', 'Method 2', 'Cluster coefficient'],  [[Shelby_Gas.cluster_coeff]*2, [0, 6], 'green'])
-Wcluster_coeff1_ave, Pcluster_coeff1_ave, Gcluster_coeff1_ave = np.mean(cost1[0]), np.mean(cost1[1]), np.mean(cost1[2])
-Wcost2_ave, Pcost2_ave, Gcluster_coeff2_ave = np.mean(cost2[0]), np.mean(cost2[1]), np.mean(cost2[2])
+cluster_coeff1_ave = [np.mean(cluster_coeff1[0]), np.mean(cluster_coeff1[1]), np.mean(cluster_coeff1[2])]
+cluster_coeff1_std = [np.std(cluster_coeff1[0]), np.std(cluster_coeff1[1]), np.std(cluster_coeff1[2])]
+cluster_coeff2_ave = [np.mean(cluster_coeff2[0]), np.mean(cluster_coeff2[1]), np.mean(cluster_coeff2[2])]
+cluster_coeff2_std = [np.std(cluster_coeff2[0]), np.std(cluster_coeff2[1]), np.std(cluster_coeff2[2])]
 
 
-sf.plotdistcompare([eff1_noinf[0], 'royalblue', 'Method 1', 'Spatial efficiency'], [eff2[0], 'deepskyblue', 'Method 2', 'Spatial efficiency'], [[Shelby_Water.efficiency]*2, [0, 160], 'blue'])
-sf.plotdistcompare([eff1_noinf[1], 'maroon', 'Method 1', 'Spatial efficiency'], [eff2[1], 'darkorange', 'Method 2', 'Spatial efficiency'], [[Shelby_Power.efficiency]*2, [0, 140], 'red'])
-sf.plotdistcompare([eff1_noinf[2], 'darkgreen', 'Method 1', 'Spatial efficiency'], [eff2[2], 'lime', 'Method 2', 'Spatial efficiency'],  [[Shelby_Gas.efficiency]*2, [0, 50], 'green'])
+sf.plotdistcompare([eff1[0], 'royalblue', 'Method 1', 'Spatial efficiency'], [eff2[0], 'deepskyblue', 'Method 2', 'Spatial efficiency'], [[Shelby_Water.efficiency]*2, [0, 160], 'blue'])
+sf.plotdistcompare([eff1[1], 'maroon', 'Method 1', 'Spatial efficiency'], [eff2[1], 'darkorange', 'Method 2', 'Spatial efficiency'], [[Shelby_Power.efficiency]*2, [0, 140], 'red'])
+sf.plotdistcompare([eff1[2], 'darkgreen', 'Method 1', 'Spatial efficiency'], [eff2[2], 'lime', 'Method 2', 'Spatial efficiency'],  [[Shelby_Gas.efficiency]*2, [0, 50], 'green'])
+eff1_ave = [np.mean(eff1[0]), np.mean(eff1[1]), np.mean(eff1[2])]
+eff1_std = [np.std(eff1[0]), np.std(eff1[1]), np.std(eff1[2])]
+eff2_ave = [np.mean(eff2[0]), np.mean(eff2[1]), np.mean(eff2[2])]
+eff2_std = [np.std(eff2[0]), np.std(eff2[1]), np.std(eff2[2])]
+
+
 
 sf.plotdistcompare([topo_eff1[0], 'royalblue', 'Method 1', 'Topological efficiency'], [topo_eff2[0], 'deepskyblue', 'Method 2', 'Topological efficiency'], [[Shelby_Water.topo_efficiency]*2, [0, 25], 'blue'])
 sf.plotdistcompare([topo_eff1[1], 'maroon', 'Method 1', 'Topological efficiency'], [topo_eff2[1], 'darkorange', 'Method 2', 'Topological efficiency'], [[Shelby_Power.topo_efficiency]*2, [0, 25], 'red'])
 sf.plotdistcompare([topo_eff1[2], 'darkgreen', 'Method 1', 'Topological efficiency'], [topo_eff2[2], 'lime', 'Method 2', 'Topological efficiency'],  [[Shelby_Gas.topo_efficiency]*2, [0, 6], 'green'])
+topoeff1_ave = [np.mean(topo_eff1[0]), np.mean(topo_eff1[1]), np.mean(topo_eff1[2])]
+topoeff1_std = [np.std(topo_eff1[0]), np.std(topo_eff1[1]), np.std(topo_eff1[2])]
+topoeff2_ave = [np.mean(topo_eff2[0]), np.mean(topo_eff2[1]), np.mean(topo_eff2[2])]
+topoeff2_std = [np.std(topo_eff2[0]), np.std(topo_eff2[1]), np.std(topo_eff2[2])]
+
+
+
 
 sf.plotdistcompare([diameter1[0], 'royalblue', 'Method 1', 'Spatial diameter'], [diameter2[0], 'deepskyblue', 'Method 2', 'Spatial diameter'], [[Shelby_Water.diameter]*2, [0, 0.035], 'blue'])
 sf.plotdistcompare([diameter1[1], 'maroon', 'Method 1', 'Spatial diameter'], [diameter2[1], 'darkorange', 'Method 2', 'Spatial diameter'], [[Shelby_Power.diameter]*2, [0, 0.035], 'red'])
 sf.plotdistcompare([diameter1[2], 'darkgreen', 'Method 1', 'Spatial diameter'], [diameter2[2], 'lime', 'Method 2', 'Spatial diameter'],  [[Shelby_Gas.diameter]*2, [0, 0.035], 'green'])
+diameter1_ave = [np.mean(diameter1[0]), np.mean(diameter1[1]), np.mean(diameter1[2])]
+diameter1_std = [np.std(diameter1[0]), np.std(diameter1[1]), np.std(diameter1[2])]
+diameter2_ave = [np.mean(diameter2[0]), np.mean(diameter2[1]), np.mean(diameter2[2])]
+diameter2_std = [np.std(diameter2[0]), np.std(diameter2[1]), np.std(diameter2[2])]
+
+
 
 sf.plotdistcompare([topodiameter1[0], 'royalblue', 'Method 1', 'Topological diameter'], [topodiameter2[0], 'deepskyblue', 'Method 2', 'Topological diameter'], [[Shelby_Water.topodiameter]*2, [0, 0.4], 'blue'])
 sf.plotdistcompare([topodiameter1[1], 'maroon', 'Method 1', 'Topological diameter'], [topodiameter2[1], 'darkorange', 'Method 2', 'Topological diameter'], [[Shelby_Power.topodiameter]*2, [0, 1.0], 'red'])
 sf.plotdistcompare([topodiameter1[2], 'darkgreen', 'Method 1', 'Topological diameter'], [topodiameter2[2], 'lime', 'Method 2', 'Topological diameter'],  [[Shelby_Gas.topodiameter]*2, [0, 1.0], 'green'])
+topodiameter1_ave = [np.mean(topodiameter1[0]), np.mean(topodiameter1[1]), np.mean(topodiameter1[2])]
+topodiameter1_std = [np.std(topodiameter1[0]), np.std(topodiameter1[1]), np.std(topodiameter1[2])]
+topodiameter2_ave = [np.mean(topodiameter2[0]), np.mean(topodiameter2[1]), np.mean(topodiameter2[2])]
+topodiameter2_std = [np.std(topodiameter2[0]), np.std(topodiameter2[1]), np.std(topodiameter2[2])]
+
 
 
 
