@@ -56,7 +56,7 @@ cost1, cost2 = [[], [], []], [[], [], []]
     
 #----------------------------------------------------Network initialization
 Temp = 0
-while(Temp <= 10):
+while(Temp <= 50):
     Water = network(dt.name1, dt.supply1, dt.transmission1, dt.demand1, dt.nodenum1, dt.supplynum1, dt.trannum1, dt.demandnum1, dt.color1, Geox, Geoy)
     Power = network(dt.name2, dt.supply2, dt.transmission2, dt.demand2, dt.nodenum2, dt.supplynum2, dt.trannum2, dt.demandnum2, dt.color2, Geox, Geoy)
     Gas = network(dt.name3, dt.supply3, dt.transmission3, dt.demand3, dt.nodenum3, dt.supplynum3, dt.trannum3, dt.demandnum3, dt.color3, Geox, Geoy)
@@ -127,10 +127,15 @@ while(Temp <= 10):
         cost2[i].append(Network.cost)
     
     Temp += 1
+    print(Temp)
+
+
 
 
 ##Remove the element of the infinity value in list network.efficiency
-eff1 = [sf.Removeinf(eff1[0]), sf.Removeinf(eff1[1]), sf.Removeinf(eff1[2])]    
+eff1 = [sf.Removeinf(eff1[0]), sf.Removeinf(eff1[1]), sf.Removeinf(eff1[2])] 
+key1,  key2 = ['Method1', 'Method2', 'The real network'], ['Water', 'Power', 'Gas']
+
     
 #Compare several features of networks genering using different methods and original networks
 ##Cost: demand - population
@@ -141,6 +146,14 @@ cost1_ave = [np.mean(cost1[0]), np.mean(cost1[1]), np.mean(cost1[2])]
 cost1_std = [np.std(cost1[0]), np.std(cost1[1]), np.std(cost1[2])]
 cost2_ave = [np.mean(cost2[0]), np.mean(cost2[1]), np.mean(cost2[2])]
 cost2_std = [np.std(cost2[0]), np.std(cost2[1]), np.std(cost2[2])]
+
+value_cost = [Shelby_Water.cost, Shelby_Power.cost, Shelby_Gas.cost]
+cost_list = sf.list2dataframe([cost1, cost2], value_cost, key1, key2)
+cost_frame = pd.DataFrame(cost_list, columns = ['Method', 'Infrastructure', 'Value'])
+plt.figure(figsize = (14, 8))
+sns.boxplot(x = 'Infrastructure', y = 'Value', hue = 'Method', data = cost_frame)
+
+
 
 
 sf.plotdistcompare([cluster_coeff1[0], 'royalblue', 'Method 1', 'Cluster coefficient'], [cluster_coeff2[0], 'deepskyblue', 'Method 2', 'Cluster coefficient'], [[Shelby_Water.cluster_coeff]*2, [0, 14], 'blue'])
@@ -190,7 +203,6 @@ topodiameter1_ave = [np.mean(topodiameter1[0]), np.mean(topodiameter1[1]), np.me
 topodiameter1_std = [np.std(topodiameter1[0]), np.std(topodiameter1[1]), np.std(topodiameter1[2])]
 topodiameter2_ave = [np.mean(topodiameter2[0]), np.mean(topodiameter2[1]), np.mean(topodiameter2[2])]
 topodiameter2_std = [np.std(topodiameter2[0]), np.std(topodiameter2[1]), np.std(topodiameter2[2])]
-
 
 
 

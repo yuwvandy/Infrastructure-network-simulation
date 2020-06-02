@@ -114,7 +114,7 @@ def neighbor2(sol, Geox, Geoy, T):
             if(temp >= 1000):
                 return initial_sol
             Sol = copy.deepcopy(sol)
-            print(temp, "temp")
+#            print(temp, "temp")
             
 def acceptance_probability(old_cost, new_cost, T):
     return math.exp((old_cost - new_cost)/T)
@@ -141,7 +141,7 @@ def anneal1(sol, Type, Geox, Geoy, PD, Tractx, Tracty):
                 sol = new_sol
                 old_cost = new_cost
                 Cost_Iter.append(old_cost)
-            print('Iteration {}, Temperature {}, Cost {}'.format(Time, T, old_cost))
+#            print('Iteration {}, Temperature {}, Cost {}'.format(Time, T, old_cost))
             i += 1
             Time += 1
             c.append(new_cost)
@@ -177,7 +177,7 @@ def anneal2(sol, Type, Geox, Geoy, PD, Tractx, Tracty):
                 sol = new_sol
                 old_cost = new_cost
                 Cost_Iter.append(old_cost)
-            print('Iteration {}, Temperature {}, Cost {}'.format(Time, T, old_cost))
+#            print('Iteration {}, Temperature {}, Cost {}'.format(Time, T, old_cost))
             i += 1
             Time += 1
             c.append(new_cost)
