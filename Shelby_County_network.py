@@ -18,6 +18,7 @@ from matplotlib import pyplot as plt
 import Sharefunction as sf
 import math
 import numpy as np
+import pandas as pd
 
 def read(Npath, Epath):
     """Read the .xlsx files and get the node and edge lists
