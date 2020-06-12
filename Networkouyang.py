@@ -14,20 +14,18 @@ import annealsimulation as ans
 from matplotlib import pyplot as plt
 
 
-class Network2:
-    def __init__(self, name, Geox, Geoy, nodenum, supplynum, demandnum, supplyname, demandname, color):
-        self.name = name
+class network2:
+    def __init__(self, netdata,Geox, Geoy):
+        
+        self.name, self.supplyname, self.demandname = netdata["name"], netdata["supplyname"], netdata["demandname"]
+        
+        self.nodenum, self.supplynum, self.demandnum = netdata["nodenum"], netdata["supplynum"], netdata["demandnum"]
+        
+        self.color = netdata["color"]
         
         self.Geox = Geox
         self.Geoy = Geoy
         
-        self.nodenum = nodenum
-        self.supplynum = supplynum
-        self.demandnum = demandnum
-        
-        self.supplyname = supplyname
-        self.demandname = demandname
-        self.color = color
         
         self.supplyseries = np.arange(0, self.supplynum, 1)
         self.demandseries = np.arange(self.supplynum + 1, self.nodenum, 1)

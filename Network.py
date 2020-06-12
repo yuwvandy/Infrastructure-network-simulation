@@ -13,18 +13,15 @@ import annealsimulation as ans
 class network:
     """Initiate the class of the network
     """
-    def __init__(self, name, supplyname, tranname, demandname, nodenum, supplynum, trannum, demandnum, color, Geox, Geoy):
+    def __init__(self, netdata, Geox, Geoy):
+        """Initialize the parameters of the networks and set up the background
+        """
+        #Name
+        self.name, self.supplyname, self.tranname, self.demandname = netdata["name"], netdata["supplyname"], netdata["transmissionname"], netdata["demandname"]
+        #Facility number
+        self.nodenum, self.demandnum, self.trannum, self.supplynum = netdata["nodenum"], netdata["demandnum"], netdata["trannum"], netdata["supplynum"]
         
-        self.name = name
-        self.supplyname = supplyname
-        self.tranname = tranname
-        self.demandname = demandname
-        
-        self.nodenum = nodenum
-        self.demandnum = demandnum
-        self.trannum = trannum
-        self.supplynum = supplynum
-        
+        #NodeSeries Number
         self.demandseries = np.arange(self.supplynum + self.trannum, self.supplynum+self.trannum+self.demandnum, 1)
         self.transeries = np.arange(self.supplynum, self.supplynum+self.trannum, 1)
         self.supplyseries  = np.arange(0, self.supplynum, 1)
@@ -32,7 +29,7 @@ class network:
         self.trandemandseries = np.concatenate((self.transeries, self.demandseries))
         
         
-        self.color = color
+        self.color = netdata["color"]
         self.Geox = Geox
         self.Geoy = Geoy
     

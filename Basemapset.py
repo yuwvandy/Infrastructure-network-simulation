@@ -34,7 +34,7 @@ norm = colors.BoundaryNorm(bounds, cmap.N)
 
 # Open the population data file and make sure it is in the same folder with current program file
 # The file can be found on the website: https://daac.ornl.gov/ISLSCP_II/guides/global_population_xdeg.html (Population density, population and area of each area)
-filename = 'people_count_1995.asc' #Population map, not density!
+filename = './data/people_count_1995.asc' #Population map, not density!
 with open(filename) as f:
     reader = csv.reader(f)
     line_count = 0

@@ -74,9 +74,9 @@ def Adjmatrix(Network, edge, Type):
     Network.Adjmatrix = np.zeros((Network.nodenum, Network.nodenum), dtype = int)
     for i in range(len(edge)):
         Network.Adjmatrix[edge[i, 0], edge[i, 1]] = 1
-        Network.Adjmatrix[edge[i, 1], edge[i, 0]] = 1
-#        if(Type[edge[i, 0]] == Type[edge[i, 1]]):
-#            Network.Adjmatrix[edge[i, 1], edge[i, 0]] = 1
+#        Network.Adjmatrix[edge[i, 1], edge[i, 0]] = 1
+        if(Type[edge[i, 0]] == Type[edge[i, 1]]):
+            Network.Adjmatrix[edge[i, 1], edge[i, 0]] = 1
         
 def cost(Network, Tract_pop, Tractx, Tracty, Geox, Geoy):
     """Calculate the overall cost all a new solution: two type: demand-population, supply-transmission(transmission-demand)
@@ -104,9 +104,9 @@ Pname = 'Spower'
 Gname = 'Sgas'
 
 
-WNpath, WEpath = r'WaterNodes.xlsx', r'WaterEdges.xlsx'
-PNpath, PEpath = r'PowerNodes.xlsx', r'PowerEdges.xlsx'
-GNpath, GEpath = r'GasNodes.xlsx', r'GasEdges.xlsx'
+WNpath, WEpath = r'.\data\WaterNodes.xlsx', r'.\data\WaterEdges.xlsx'
+PNpath, PEpath = r'.\data\PowerNodes.xlsx', r'.\data\PowerEdges.xlsx'
+GNpath, GEpath = r'.\data\GasNodes.xlsx', r'.\data\GasEdges.xlsx'
 
 WN, WE = read(WNpath, WEpath)
 PN, PE = read(PNpath, PEpath)
