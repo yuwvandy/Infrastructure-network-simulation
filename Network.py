@@ -182,7 +182,10 @@ class network:
         for i in range(self.demandnum):
             minindex = np.array(sf.minimumk(self.Dismatrix[self.demandseries[i], self.demandseries], min(sampleseq[self.demandseries[i]] + 1, self.demandnum))) + self.supplynum + self.trannum
             minindex = minindex[1:-1]
-            self.Adjmatrix[self.demandseries[i], minindex] = 1
+            for j in range(len(minindex)):
+                if(self.Adjmatrix[self.demandseries[i], minindex[j]] == 1 or self.Adjmatrix[minindex[j], self.demandseries[i]] == 1):
+                    continue
+                self.Adjmatrix[self.demandseries[i], minindex[j]] = 1
 #            self.Adjmatrix[minindex, self.demandseries[i]] = 1
         
         

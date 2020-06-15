@@ -162,13 +162,13 @@ def anneal2(sol, Type, Geox, Geoy, PD, Tractx, Tracty):
     while T > T_min:
         i = 0
         if(T > 0.7 and T <= 1):
-            Iter = 10 #100
+            Iter = 100 #100
         if(T <= 0.7 and T >= 0.3):
-            Iter = 10 #200
+            Iter = 200 #200
         if(T < 0.3 and T >= 0.2):
-            Iter = 10 #500
+            Iter = 500 #500
         if(T < 0.2 and T >= 0.1):
-            Iter = 10 #800
+            Iter = 800 #800
         while i <= Iter:
             new_sol = neighbor2(sol, Geox, Geoy, T)
             new_cost = cost(new_sol, Geox, Geoy, PD, Type, Tractx, Tracty)

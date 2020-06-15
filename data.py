@@ -97,3 +97,43 @@ gas2para = {"name": "Gas2",
 WNpath, WEpath = ".\data\WaterNodes.xlsx", ".\data\WaterEdges.xlsx"
 PNpath, PEpath = ".\data\PowerNodes.xlsx", ".\data\PowerEdges.xlsx"
 GNpath, GEpath = ".\data\GasNodes.xlsx", ".\data\GasEdges.xlsx"
+
+##Data for water network
+water0para = {"name": "Water0",
+              "supplyname": "Pumping Station",
+              "transmissionname": "Storage Tank",
+              "demandname": "Deliver Station",
+              "nodenum": 49,
+              "supplynum": 9,
+              "trannum": 6,
+              "demandnum": 34,
+              "color": "blue"
+              }
+
+##Data for power network
+power0para = {"name": "Power0",
+              "supplyname": "Power Plant",
+              "transmissionname": "12 or 23kV substation",
+              "demandname": "Deliver Station",
+              "nodenum": 60,
+              "supplynum": 9,
+              "trannum": 14,
+              "demandnum": 37,
+              "color": "red"
+              }
+
+##Data for gas network
+gas0para = {"name": "Gas0",
+              "supplyname": "Gas Pumping Station",
+              "transmissionname": "Intermediate Station",
+              "demandname": "Deliver Station",
+              "nodenum": 16,
+              "supplynum": 3,
+              "trannum": 7,
+              "demandnum": 6,
+              "color": "green"
+              }
+
+##---------------------------------Data for plot the comparison of the distribution and plot the comparison of the box
+num_compare = 3
+color_compare = [['royalblue', 'deepskyblue', 'blue'], ['maroon', 'darkorange', 'red'], ['darkgreen', 'lime', 'green']]

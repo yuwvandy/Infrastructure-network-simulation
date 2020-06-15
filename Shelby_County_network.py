@@ -46,17 +46,17 @@ def latlon2XY(lat, lon, Base):
     
     return X, Y
 
-def supplytrandemandnum(Type, name1, name2, name3, num):
+def supplytrandemandnum(Type, paralist, num):
     """Calculate the number of supply nodes, transmission nodes and demand nodes
     """
     supply, transmission, demand = 0, 0, 0
     
     for i in range(num):
-        if(Type[i] == name1):
+        if(Type[i] == paralist["supplyname"]):
             supply += 1
-        if(Type[i] == name2):
+        if(Type[i] == paralist["transmissionname"]):
             transmission += 1
-        if(Type[i] == name3):
+        if(Type[i] == paralist["demandname"]):
             demand += 1
             
     return supply, transmission, demand
@@ -122,13 +122,13 @@ WX, WY = latlon2XY(Wlat, Wlon, Base)
 PX, PY = latlon2XY(Plat, Plon, Base)
 GX, GY = latlon2XY(Glat, Glon, Base)
 
-Wsupply, Wtransmission, Wdemand = supplytrandemandnum(WType, dt.supply1, dt.transmission1, dt.demand1, Wnum)
-Psupply, Ptransmission, Pdemand = supplytrandemandnum(PType, dt.supply2, dt.transmission2, dt.demand2, Pnum)
-Gsupply, Gtransmission, Gdemand = supplytrandemandnum(GType, dt.supply3, dt.transmission3, dt.demand3, Gnum)
+Wsupply, Wtransmission, Wdemand = supplytrandemandnum(WType, dt.water1para, Wnum)
+Psupply, Ptransmission, Pdemand = supplytrandemandnum(PType, dt.power1para, Pnum)
+Gsupply, Gtransmission, Gdemand = supplytrandemandnum(GType, dt.gas1para, Gnum)
 
-Shelby_Water = network(Wname, dt.supply1, dt.transmission1, dt.demand1, Wnum, Wsupply, Wtransmission, Wdemand, dt.color1, Geox, Geoy)
-Shelby_Power = network(Pname, dt.supply2, dt.transmission2, dt.demand2, Pnum, Psupply, Ptransmission, Pdemand, dt.color2, Geox, Geoy)
-Shelby_Gas = network(Gname, dt.supply3, dt.transmission3, dt.demand3, Gnum, Gsupply, Gtransmission, Gdemand, dt.color3, Geox, Geoy)
+Shelby_Water = network(dt.water0para, Geox, Geoy)
+Shelby_Power = network(dt.power0para, Geox, Geoy)
+Shelby_Gas = network(dt.gas0para, Geox, Geoy)
 
 Shelby_Water.x, Shelby_Water.y, Shelby_Water.Type = WX, WY, WType
 Shelby_Power.x, Shelby_Power.y, Shelby_Power.Type = PX, PY, PType
@@ -152,7 +152,7 @@ for i in range(len(ShelbyNetwork)):
     cost(Network, Tract_density, Tractx, Tracty, Geox, Geoy)
 
 
-
+#------------------------------------------------------------------------------
 plt.figure(figsize = (20, 12))
 Base = bm.BaseMapSet(dt.Type1, dt.llon, dt.rlon, dt.llat, dt.rlat)
 

@@ -61,7 +61,7 @@ degree1, degree2 = [[], [], []], [[], [], []]
     
 #----------------------------------------------------Network initialization
 Temp = 0
-while(Temp <= 10):
+while(Temp <= 50):
     Water = network(dt.water1para, Geox, Geoy)
     Power = network(dt.power1para, Geox, Geoy)
     Gas = network(dt.gas1para, Geox, Geoy)
@@ -149,104 +149,34 @@ key1,  key2 = ['Method1', 'Method2', 'The real network'], ['Water', 'Power', 'Ga
     
 #Compare several features of networks genering using different methods and original networks
 ##Cost: demand - population
-sf.plotdistcompare([cost1[0], 'royalblue', 'Method 1', 'Cost'], [cost2[0], 'deepskyblue', 'Method 2', 'Cost'], [[Shelby_Water.cost]*2, [0, 1.4], 'blue'])
-sf.plotdistcompare([cost1[1], 'maroon', 'Method 1', 'Cost'], [cost2[1], 'darkorange', 'Method 2', 'Cost'], [[Shelby_Power.cost]*2, [0, 1.4], 'red'])
-sf.plotdistcompare([cost1[2], 'darkgreen', 'Method 1', 'Cost'], [cost2[2], 'lime', 'Method 2', 'Cost'],  [[Shelby_Gas.cost]*2, [0, 1.4], 'green'])
-cost1_ave = [np.mean(cost1[0]), np.mean(cost1[1]), np.mean(cost1[2])]
-cost1_std = [np.std(cost1[0]), np.std(cost1[1]), np.std(cost1[2])]
-cost1_cv = [scipy.stats.variation(cost1[0]), scipy.stats.variation(cost1[1]), scipy.stats.variation(cost1[2])]
-
-cost2_ave = [np.mean(cost2[0]), np.mean(cost2[1]), np.mean(cost2[2])]
-cost2_std = [np.std(cost2[0]), np.std(cost2[1]), np.std(cost2[2])]
-cost2_cv = [scipy.stats.variation(cost2[0]), scipy.stats.variation(cost2[1]), scipy.stats.variation(cost2[2])]
+value = [Shelby_Water.cost, Shelby_Power.cost, Shelby_Gas.cost]
+cost1_ave, cost2_ave, cost1_std, cost2_std, cost1_cv, cost2_cv = sf.statistical_analysis('Cost', cost1, cost2, value, dt.color_compare, dt.num_compare, key1, key2)
 
 
-value_cost = [Shelby_Water.cost, Shelby_Power.cost, Shelby_Gas.cost]
-sf.plotboxcompare(value_cost, cost1, cost2, key1, key2)
+##Cluster_coeff
+value = [Shelby_Water.cluster_coeff, Shelby_Power.cluster_coeff, Shelby_Gas.cluster_coeff]
+cluster1_ave, cluster2_ave, cluster1_std, cluster2_std, cluster1_cv, cluster2_cv = sf.statistical_analysis('Cluster coefficient', cluster_coeff1, cluster_coeff2, value, dt.color_compare, dt.num_compare, key1, key2)
 
 
-
-sf.plotdistcompare([cluster_coeff1[0], 'royalblue', 'Method 1', 'Cluster coefficient'], [cluster_coeff2[0], 'deepskyblue', 'Method 2', 'Cluster coefficient'], [[Shelby_Water.cluster_coeff]*2, [0, 14], 'blue'])
-sf.plotdistcompare([cluster_coeff1[1], 'maroon', 'Method 1', 'Cluster coefficient'], [cluster_coeff2[1], 'darkorange', 'Method 2', 'Cluster coefficient'], [[Shelby_Power.cluster_coeff]*2, [0, 14], 'red'])
-sf.plotdistcompare([cluster_coeff1[2], 'darkgreen', 'Method 1', 'Cluster coefficient'], [cluster_coeff2[2], 'lime', 'Method 2', 'Cluster coefficient'],  [[Shelby_Gas.cluster_coeff]*2, [0, 6], 'green'])
-cluster_coeff1_ave = [np.mean(cluster_coeff1[0]), np.mean(cluster_coeff1[1]), np.mean(cluster_coeff1[2])]
-cluster_coeff1_std = [np.std(cluster_coeff1[0]), np.std(cluster_coeff1[1]), np.std(cluster_coeff1[2])]
-cluster_coeff1_cv = [scipy.stats.variation(cluster_coeff1[0]), scipy.stats.variation(cluster_coeff1[1]), scipy.stats.variation(cluster_coeff1[2])]
-
-cluster_coeff2_ave = [np.mean(cluster_coeff2[0]), np.mean(cluster_coeff2[1]), np.mean(cluster_coeff2[2])]
-cluster_coeff2_std = [np.std(cluster_coeff2[0]), np.std(cluster_coeff2[1]), np.std(cluster_coeff2[2])]
-cluster_coeff2_cv = [scipy.stats.variation(cluster_coeff2[0]), scipy.stats.variation(cluster_coeff2[1]), scipy.stats.variation(cluster_coeff2[2])]
+##Spatial efficiency
+value = [Shelby_Water.efficiency, Shelby_Power.efficiency, Shelby_Gas.efficiency]
+eff1_ave, eff2_ave, eff1_std, eff2_std, eff1_cv, eff2_cv = sf.statistical_analysis('Spatial efficiency', eff1, eff2, value, dt.color_compare, dt.num_compare, key1, key2)
 
 
-value_cluster_coeff = [Shelby_Water.cluster_coeff, Shelby_Power.cluster_coeff, Shelby_Gas.cluster_coeff]
-sf.plotboxcompare(value_cluster_coeff, cluster_coeff1, cluster_coeff2, key1, key2)
+##Topological efficiency
+value = [Shelby_Water.topo_efficiency, Shelby_Power.topo_efficiency, Shelby_Gas.topo_efficiency]
+topoeff1_ave, topoeff2_ave, topoeff1_std, topoeff2_std, topoeff1_cv, topoeff2_cv = sf.statistical_analysis('Topological efficiency', topo_eff1, topo_eff2, value, dt.color_compare, dt.num_compare, key1, key2)
 
 
-
-sf.plotdistcompare([eff1[0], 'royalblue', 'Method 1', 'Spatial efficiency'], [eff2[0], 'deepskyblue', 'Method 2', 'Spatial efficiency'], [[Shelby_Water.efficiency]*2, [0, 160], 'blue'])
-sf.plotdistcompare([eff1[1], 'maroon', 'Method 1', 'Spatial efficiency'], [eff2[1], 'darkorange', 'Method 2', 'Spatial efficiency'], [[Shelby_Power.efficiency]*2, [0, 140], 'red'])
-sf.plotdistcompare([eff1[2], 'darkgreen', 'Method 1', 'Spatial efficiency'], [eff2[2], 'lime', 'Method 2', 'Spatial efficiency'],  [[Shelby_Gas.efficiency]*2, [0, 50], 'green'])
-eff1_ave = [np.mean(eff1[0]), np.mean(eff1[1]), np.mean(eff1[2])]
-eff1_std = [np.std(eff1[0]), np.std(eff1[1]), np.std(eff1[2])]
-eff1_cv = [scipy.stats.variation(eff1[0]), scipy.stats.variation(eff1[1]), scipy.stats.variation(eff1[2])]
-
-eff2_ave = [np.mean(eff2[0]), np.mean(eff2[1]), np.mean(eff2[2])]
-eff2_std = [np.std(eff2[0]), np.std(eff2[1]), np.std(eff2[2])]
-eff2_cv = [scipy.stats.variation(eff2[0]), scipy.stats.variation(eff2[1]), scipy.stats.variation(eff2[2])]
+##Diameter efficiency
+value = [Shelby_Water.diameter, Shelby_Power.diameter, Shelby_Gas.diameter]
+diameter1_ave, diameter2_ave, diameter1_std, diameter2_std, diameter1_cv, diameter2_cv = sf.statistical_analysis('Spatial diameter', diameter1, diameter2, value, dt.color_compare, dt.num_compare, key1, key2)
 
 
-value_eff = [Shelby_Water.efficiency, Shelby_Power.efficiency, Shelby_Gas.efficiency]
-sf.plotboxcompare(value_eff, eff1, eff2, key1, key2)
+##Topological diameter efficiency
+value = [Shelby_Water.topodiameter, Shelby_Power.topodiameter, Shelby_Gas.topodiameter]
+topodiameter1_ave, topodiameter2_ave, topodiameter1_std, topodiameter2_std, topodiameter1_cv, topodiameter2_cv = sf.statistical_analysis('Spatial diameter', topodiameter1, topodiameter2, value, dt.color_compare, dt.num_compare, key1, key2)
 
-
-sf.plotdistcompare([topo_eff1[0], 'royalblue', 'Method 1', 'Topological efficiency'], [topo_eff2[0], 'deepskyblue', 'Method 2', 'Topological efficiency'], [[Shelby_Water.topo_efficiency]*2, [0, 25], 'blue'])
-sf.plotdistcompare([topo_eff1[1], 'maroon', 'Method 1', 'Topological efficiency'], [topo_eff2[1], 'darkorange', 'Method 2', 'Topological efficiency'], [[Shelby_Power.topo_efficiency]*2, [0, 25], 'red'])
-sf.plotdistcompare([topo_eff1[2], 'darkgreen', 'Method 1', 'Topological efficiency'], [topo_eff2[2], 'lime', 'Method 2', 'Topological efficiency'],  [[Shelby_Gas.topo_efficiency]*2, [0, 6], 'green'])
-topoeff1_ave = [np.mean(topo_eff1[0]), np.mean(topo_eff1[1]), np.mean(topo_eff1[2])]
-topoeff1_std = [np.std(topo_eff1[0]), np.std(topo_eff1[1]), np.std(topo_eff1[2])]
-topoeff1_cv = [scipy.stats.variation(topo_eff1[0]), scipy.stats.variation(topo_eff1[1]), scipy.stats.variation(topo_eff1[2])]
-
-
-topoeff2_ave = [np.mean(topo_eff2[0]), np.mean(topo_eff2[1]), np.mean(topo_eff2[2])]
-topoeff2_std = [np.std(topo_eff2[0]), np.std(topo_eff2[1]), np.std(topo_eff2[2])]
-topoeff2_cv = [scipy.stats.variation(topo_eff2[0]), scipy.stats.variation(topo_eff2[1]), scipy.stats.variation(topo_eff2[2])]
-
-
-value_topo_eff = [Shelby_Water.topo_efficiency, Shelby_Power.topo_efficiency, Shelby_Gas.topo_efficiency]
-sf.plotboxcompare(value_topo_eff, topo_eff1, topo_eff2, key1, key2)
-
-
-
-sf.plotdistcompare([diameter1[0], 'royalblue', 'Method 1', 'Spatial diameter'], [diameter2[0], 'deepskyblue', 'Method 2', 'Spatial diameter'], [[Shelby_Water.diameter]*2, [0, 0.035], 'blue'])
-sf.plotdistcompare([diameter1[1], 'maroon', 'Method 1', 'Spatial diameter'], [diameter2[1], 'darkorange', 'Method 2', 'Spatial diameter'], [[Shelby_Power.diameter]*2, [0, 0.035], 'red'])
-sf.plotdistcompare([diameter1[2], 'darkgreen', 'Method 1', 'Spatial diameter'], [diameter2[2], 'lime', 'Method 2', 'Spatial diameter'],  [[Shelby_Gas.diameter]*2, [0, 0.035], 'green'])
-diameter1_ave = [np.mean(diameter1[0]), np.mean(diameter1[1]), np.mean(diameter1[2])]
-diameter1_std = [np.std(diameter1[0]), np.std(diameter1[1]), np.std(diameter1[2])]
-diameter1_cv = [scipy.stats.variation(diameter1[0]), scipy.stats.variation(diameter1[1]), scipy.stats.variation(diameter1[2])]
-
-diameter2_ave = [np.mean(diameter2[0]), np.mean(diameter2[1]), np.mean(diameter2[2])]
-diameter2_std = [np.std(diameter2[0]), np.std(diameter2[1]), np.std(diameter2[2])]
-diameter2_cv = [scipy.stats.variation(diameter2[0]), scipy.stats.variation(diameter2[1]), scipy.stats.variation(diameter2[2])]
-
-
-value_diameter = [Shelby_Water.diameter, Shelby_Power.diameter, Shelby_Gas.diameter]
-sf.plotboxcompare(value_diameter, diameter1, diameter2, key1, key2)
-
-
-sf.plotdistcompare([topodiameter1[0], 'royalblue', 'Method 1', 'Topological diameter'], [topodiameter2[0], 'deepskyblue', 'Method 2', 'Topological diameter'], [[Shelby_Water.topodiameter]*2, [0, 0.4], 'blue'])
-sf.plotdistcompare([topodiameter1[1], 'maroon', 'Method 1', 'Topological diameter'], [topodiameter2[1], 'darkorange', 'Method 2', 'Topological diameter'], [[Shelby_Power.topodiameter]*2, [0, 1.0], 'red'])
-sf.plotdistcompare([topodiameter1[2], 'darkgreen', 'Method 1', 'Topological diameter'], [topodiameter2[2], 'lime', 'Method 2', 'Topological diameter'],  [[Shelby_Gas.topodiameter]*2, [0, 1.0], 'green'])
-topodiameter1_ave = [np.mean(topodiameter1[0]), np.mean(topodiameter1[1]), np.mean(topodiameter1[2])]
-topodiameter1_std = [np.std(topodiameter1[0]), np.std(topodiameter1[1]), np.std(topodiameter1[2])]
-topodiameter1_cv = [scipy.stats.variation(topodiameter1[0]), scipy.stats.variation(topodiameter1[1]), scipy.stats.variation(topodiameter1[2])]
-
-topodiameter2_ave = [np.mean(topodiameter2[0]), np.mean(topodiameter2[1]), np.mean(topodiameter2[2])]
-topodiameter2_std = [np.std(topodiameter2[0]), np.std(topodiameter2[1]), np.std(topodiameter2[2])]
-topodiameter2_cv = [scipy.stats.variation(topodiameter2[0]), scipy.stats.variation(topodiameter2[1]), scipy.stats.variation(topodiameter2[2])]
-
-
-value_topo_diameter = [Shelby_Water.topodiameter, Shelby_Power.topodiameter, Shelby_Gas.topodiameter]
-sf.plotboxcompare(value_topo_diameter, topodiameter1, topodiameter2, key1, key2)
 
 
 

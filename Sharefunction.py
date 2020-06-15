@@ -12,6 +12,7 @@ from matplotlib import pyplot as plt
 import Basemapset as bm
 import seaborn as sns
 import pandas as pd
+import scipy
 
 def FeatureScaling(A):
     return ((A-np.min(A))/(np.max(A)-np.min(A)))
@@ -76,12 +77,14 @@ def plotdistcompare(list1, list2, list3):
            format: [data, color, label, axlabel, color]
            list3 - x and y of the corresponding Shelby County system
     """
+    plt.figure(figsize = (10, 6))
     sns.set_style("whitegrid")
     sns.set_context("paper")
     #plt.figure(figsize = (10, 6))
     sns.distplot(list1[0], color = list1[1], label = list1[2], axlabel = list1[3], norm_hist = True, kde = True)
     sns.distplot(list2[0], color = list2[1], label = list2[2], axlabel = list2[3], norm_hist = True, kde = True)
-    plt.plot(list3[0], list3[1], lw = 5, label = 'the Real network', color = list3[2])
+#    sns.distplot(list3[0], color = list3[1], label = list3[2], axlabel = list3[3], norm_hist = True, kde = True)
+#    plt.plot(list3[0], list3[1], lw = 5, label = 'the Real network', color = list3[2])
     plt.legend(bbox_to_anchor=(1, 1), loc='upper right', ncol=1, frameon = 0)
 
 def plotboxcompare(real, list1, list2, key1, key2):
@@ -96,7 +99,46 @@ def plotboxcompare(real, list1, list2, key1, key2):
     frame = pd.DataFrame(templist, columns = ['Method', 'Infrastructure', 'Value'])
     plt.figure(figsize = (14, 8))
     sns.boxplot(x = 'Infrastructure', y = 'Value', hue = 'Method', data = frame)
-
+    plt.legend(bbox_to_anchor=(1, 1), loc='upper right', ncol=1, frameon = 0)
+    
+def statistical_analysis(valuename, value1, value2, value, color, num, key1, key2):
+    """Statistical analysis of the network topology with boxplot and distribution plot in terms of comparison the three networks
+    Input: valuename - the name of the value to be plot
+           valuex - value calculated using the xth method
+           value - the topology feature of the real network
+           color - color to plot the figure
+           num - the number of differernt methods
+    Output: the boxplot and the distribution plot of certain feature of the network topology
+            average, standard deviation and the coefficient variance of the specified network topology
+    """
+    
+    Method_name = []
+    ave1, std1, cv1 = [], [], []
+    ave2, std2, cv2 = [], [], []
+    
+    for i in range(num):
+        Method_name.append('Method{}'.format(i + 1))
+        
+    for i in range(num):
+        plotdistcompare([value1[i], color[i][0], Method_name[0], valuename], [value2[i], color[i][1], Method_name[1], valuename], [[value[i]]*max(len(value1[i]), len(value2[i])), color[i][2], Method_name[2], valuename])
+        
+        ave1.append(np.mean(value1[i]))
+        ave2.append(np.mean(value2[i]))
+        
+        std1.append(np.std(value1[i]))
+        std2.append(np.std(value2[i]))
+        
+        cv1.append(scipy.stats.variation(value1[i]))
+        cv2.append(scipy.stats.variation(value2[i]))
+        
+    plotboxcompare(value, value1, value2, key1, key2)
+    
+    return ave1, ave2, std1, std2, cv1, cv2
+        
+        
+        
+    
+    
 
 
 def Removeinf(list1):
@@ -130,6 +172,8 @@ def list2dataframe(List, value, key1, key2):
         mylist.append([key1[2], key2[i], value[i]])
     
     return mylist
+
+
     
 
 #def decompose(degree, d):
