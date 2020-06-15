@@ -16,3 +16,5 @@ Developing a tool which can simulate infrastructure networks and their interdepe
 * Tract.py: import the population data in tract scale
 * Randomlinknetwork.py: Randomly distribute the nodes in 2D plane and connect them only considering the geographical distance
 * Shelby_County_network.py: set up the realistic networks in Shelby County
+## To run
+* First execuate the Shelby_County_network.py, then run the topologyanalysis.py
