@@ -99,22 +99,14 @@ def cost(Network, Tract_pop, Tractx, Tracty, Geox, Geoy):
                 
     Network.cost = Sum_Cost
 
-Wname = 'Swater'
-Pname = 'Spower'
-Gname = 'Sgas'
 
+WN, WE = read(dt.WNpath, dt.WEpath)
+PN, PE = read(dt.PNpath, dt.PEpath)
+GN, GE = read(dt.GNpath, dt.GEpath)
 
-WNpath, WEpath = r'.\data\WaterNodes.xlsx', r'.\data\WaterEdges.xlsx'
-PNpath, PEpath = r'.\data\PowerNodes.xlsx', r'.\data\PowerEdges.xlsx'
-GNpath, GEpath = r'.\data\GasNodes.xlsx', r'.\data\GasEdges.xlsx'
-
-WN, WE = read(WNpath, WEpath)
-PN, PE = read(PNpath, PEpath)
-GN, GE = read(GNpath, GEpath)
-
-Wlat, Wlon, WType, Wnum, Wedge = latlontypenumedge(WN, WE, "START WATER NODE ID", "END WATER NODE ID")
-Plat, Plon, PType, Pnum, Pedge = latlontypenumedge(PN, PE, "START POWER NODE ID", "END POWER NODE ID")
-Glat, Glon, GType, Gnum, Gedge = latlontypenumedge(GN, GE, "START GAS NODE ID", "END GAS NODE ID")
+Wlat, Wlon, WType, Wnum, Wedge = latlontypenumedge(WN, WE, dt.watername1, dt.watername2)
+Plat, Plon, PType, Pnum, Pedge = latlontypenumedge(PN, PE, dt.powername1, dt.powername2)
+Glat, Glon, GType, Gnum, Gedge = latlontypenumedge(GN, GE, dt.gasname1, dt.gasname2)
 
 plt.figure(figsize = (20, 12))
 Base = bm.BaseMapSet(dt.Type1, dt.llon, dt.rlon, dt.llat, dt.rlat)

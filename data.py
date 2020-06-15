@@ -98,6 +98,10 @@ WNpath, WEpath = ".\data\WaterNodes.xlsx", ".\data\WaterEdges.xlsx"
 PNpath, PEpath = ".\data\PowerNodes.xlsx", ".\data\PowerEdges.xlsx"
 GNpath, GEpath = ".\data\GasNodes.xlsx", ".\data\GasEdges.xlsx"
 
+watername1, watername2 = "START WATER NODE ID", "END WATER NODE ID"
+powername1, powername2 = "START POWER NODE ID", "END POWER NODE ID"
+gasname1, gasname2 = "START GAS NODE ID", "END GAS NODE ID"
+
 ##Data for water network
 water0para = {"name": "Water0",
               "supplyname": "Pumping Station",

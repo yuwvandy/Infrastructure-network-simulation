@@ -135,12 +135,6 @@ def statistical_analysis(valuename, value1, value2, value, color, num, key1, key
     
     return ave1, ave2, std1, std2, cv1, cv2
         
-        
-        
-    
-    
-
-
 def Removeinf(list1):
     """Remove the element of infinity value in the list1
     """

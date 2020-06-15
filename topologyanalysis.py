@@ -168,12 +168,12 @@ value = [Shelby_Water.topo_efficiency, Shelby_Power.topo_efficiency, Shelby_Gas.
 topoeff1_ave, topoeff2_ave, topoeff1_std, topoeff2_std, topoeff1_cv, topoeff2_cv = sf.statistical_analysis('Topological efficiency', topo_eff1, topo_eff2, value, dt.color_compare, dt.num_compare, key1, key2)
 
 
-##Diameter efficiency
+##Spatial diameter
 value = [Shelby_Water.diameter, Shelby_Power.diameter, Shelby_Gas.diameter]
 diameter1_ave, diameter2_ave, diameter1_std, diameter2_std, diameter1_cv, diameter2_cv = sf.statistical_analysis('Spatial diameter', diameter1, diameter2, value, dt.color_compare, dt.num_compare, key1, key2)
 
 
-##Topological diameter efficiency
+##Topological diameter
 value = [Shelby_Water.topodiameter, Shelby_Power.topodiameter, Shelby_Gas.topodiameter]
 topodiameter1_ave, topodiameter2_ave, topodiameter1_std, topodiameter2_std, topodiameter1_cv, topodiameter2_cv = sf.statistical_analysis('Spatial diameter', topodiameter1, topodiameter2, value, dt.color_compare, dt.num_compare, key1, key2)
 
