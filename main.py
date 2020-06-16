@@ -46,11 +46,12 @@ for i in range(len(lat)):
 Water = network(dt.water1para, Geox, Geoy)
 Power = network(dt.power1para, Geox, Geoy)
 Gas = network(dt.gas1para, Geox, Geoy)
+networklist = [Water, Power, Gas]
 
 #Calculate the node locations and topology features
-Water.network_setup(Tract_density, Tractx, Tracty, 0)
-Power.network_setup(Tract_density, Tractx, Tracty, 1)
-Gas.network_setup(Tract_density, Tractx, Tracty, 2)
+for i in range(len(network)):
+    Network = network[i]
+    Network.network_setup(Tract_density, Tractx, Tracty, i)
 
 #Initialilze the dependency of power supply nodes on gas demand nodes for generating electricity
 gdemand2psupply = phynode2node(Gas, Power, dt.para_gdemand2psupply)
@@ -63,6 +64,26 @@ pdemand2glink = phynode2link(Power, Gas, dt.para_pdemand2glink)
 
 #Initialilze the dependency of water links on power demand nodes for overcome energy loss
 pdemand2wlink = phynode2link(Power, Water, dt.para_pdemand2wlink)
+
+interdependency = [gdemand2psupply, wdemand2psupply, pdemand2glink, pdemand2wlink]
+
+#Save all data required for solving nonlinear optimization in julia
+#interdependency
+for i in range(len(interdependency)):
+    path1 = '.\\p2jdata\\' + interdependency[i].name + 'adj.csv'
+    path2 = '.\\p2jdata\\' + interdependency[i].name + 'distnode2node.csv'  
+    np.savetxt(path1, interdependency[i].adjmatrix, delimiter = ',')
+    np.savetxt(path2, interdependency[i].distmatrix, delimiter = ',')
+
+    
+#network adjmatrix
+for i in range(len(networklist)):
+    path1 = '.\\p2jdata\\' + networklist[i].name + 'adj.csv'
+    path2 = '.\\p2jdata\\' + networklist[i].name + 'distnode2node.csv'
+    np.savetxt(path1, networklist[i].Adjmatrix, delimiter = ',')
+    np.savetxt(path2, networklist[i].Dismatrix, delimiter = ',')
+    
+    
 
 
 
