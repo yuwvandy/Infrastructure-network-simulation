@@ -14,7 +14,8 @@ water1para = {"name": "Water",
               "supplynum": 9,
               "trannum": 6,
               "demandnum": 34,
-              "color": "blue"
+              "color": "blue",
+              "edgediameter": 5
               }
 
 ##Data for power network
@@ -26,7 +27,8 @@ power1para = {"name": "Power",
               "supplynum": 9,
               "trannum": 14,
               "demandnum": 37,
-              "color": "red"
+              "color": "red",
+              "edgediameter": 5
               }
 
 ##Data for gas network
@@ -38,7 +40,8 @@ gas1para = {"name": "Gas",
               "supplynum": 3,
               "trannum": 7,
               "demandnum": 6,
-              "color": "green"
+              "color": "green",
+              "edgediameter": 5
               }
               
 
@@ -141,3 +144,16 @@ gas0para = {"name": "Gas0",
 ##---------------------------------Data for plot the comparison of the distribution and plot the comparison of the box
 num_compare = 3
 color_compare = [['royalblue', 'deepskyblue', 'blue'], ['maroon', 'darkorange', 'red'], ['darkgreen', 'lime', 'green']]
+
+##--------------------------------Interdependency between several networks
+para_gdemand2psupply = {"Name": "gdemand2psupply",
+                        "dependnum": 4}
+
+para_wdemand2psupply = {"Name": "wdemand2psupply", 
+                        "dependnum": 4}
+
+para_pdemand2glink = {"Name": "pdemand2glink", 
+                        "dependnum": 4}
+
+para_pdemand2wlink = {"Name": "pdemand2wlink", 
+                        "dependnum": 4}

@@ -143,97 +143,97 @@ for i in range(len(ShelbyNetwork)):
 #    cost(Network, Tract_pop, Tractx, Tracty, Geox, Geoy)
     cost(Network, Tract_density, Tractx, Tracty, Geox, Geoy)
 
-
-#------------------------------------------------------------------------------
-plt.figure(figsize = (20, 12))
-Base = bm.BaseMapSet(dt.Type1, dt.llon, dt.rlon, dt.llat, dt.rlat)
-
-Wx, Wy = Base(Wlon, Wlat)
-Px, Py = Base(Plon, Plat)
-Gx, Gy = Base(Glon, Glat)
-
-##Water network
-Wnum = len(Wlat)
-Wxs, Wxm, Wxd = [], [], []
-Wys, Wym, Wyd = [], [], []
-for i in range(len(Wx)):
-    if(Wtype[i] == "Pump Stations"):
-        Wxs.append(Wx[i])
-        Wys.append(Wy[i])
-    if(Wtype[i] == "Storage Tanks"):
-        Wxm.append(Wx[i])
-        Wym.append(Wy[i])
-    if(Wtype[i] == "Delivery Nodes"):
-        Wxd.append(Wx[i])
-        Wyd.append(Wy[i])
-        
-#Distance and adjacent matrix
-Wadjmatrix, Wdistmatrix = np.zeros((Wnum, ))
-for i in range(len())
-        
-plt.scatter(Wxs, Wys, 400, 'blue' , marker = '+', label = 'Pumping station')        
-plt.scatter(Wxm, Wym, 200, 'blue', marker = '*', label = 'Storage tank')        
-plt.scatter(Wxd, Wyd, 100, 'blue', marker = 'o', label = 'Delivery station')        
-        
-        
-for j in range(len(Wateredge)):
-    plt.plot([Wx[Wateredge[j, 0]], Wx[Wateredge[j, 1]]], [Wy[Wateredge[j, 0]], Wy[Wateredge[j, 1]]], color = 'black')
-plt.legend(bbox_to_anchor=(0, 1), loc='upper left', ncol=1, fontsize = 15, frameon = 0)
-
-
-
-##Power network
-plt.figure(figsize = (20, 12))
-Base = BaseMapSet('local')
-Pxs, Pxm, Pxd = [], [], []
-Pys, Pym, Pyd = [], [], []
-for i in range(len(Px)):
-    if(Ptype[i] == "Gate Station"):
-        Pxs.append(Px[i])
-        Pys.append(Py[i])
-    if(Ptype[i] == "Intersection Point"):
-        Pxm.append(Px[i])
-        Pym.append(Py[i])
-    if(Ptype[i] == "23kV Substation" or Ptype[i] == "12kV Substation"):
-        Pxd.append(Px[i])
-        Pyd.append(Py[i])
-        
-plt.scatter(Pxs, Pys, 400, 'red' , marker = '+', label = 'Power Plant')        
-plt.scatter(Pxm, Pym, 200, 'red', marker = '*', label = '12 or 23kV Substation')        
-plt.scatter(Pxd, Pyd, 100, 'red', marker = 'o', label = 'Deliver Station')        
-        
-        
-
-for j in range(len(Poweredge)):
-    plt.plot([Px[Poweredge[j, 0]], Px[Poweredge[j, 1]]], [Py[Poweredge[j, 0]], Py[Poweredge[j, 1]]], color = 'black')
-plt.legend(bbox_to_anchor=(0, 1), loc='upper left', ncol=1, fontsize = 25, frameon = 0)
-plt.savefig("Power network.png", dpi = 2000) 
-
-##Gas network
-plt.figure(figsize = (20, 12))
-Base = BaseMapSet('local')
-Gxs, Gxm, Gxd = [], [], []
-Gys, Gym, Gyd = [], [], []
-for i in range(len(Gx)):
-    if(Gtype[i] == "Gate Station"):
-        Gxs.append(Gx[i])
-        Gys.append(Gy[i])
-    if(Gtype[i] == "Regulator Station"):
-        Gxm.append(Gx[i])
-        Gym.append(Gy[i])
-    if(Gtype[i] == "Other"):
-        Gxd.append(Gx[i])
-        Gyd.append(Gy[i])
-        
-plt.scatter(Gxs, Gys, 400, 'green' , marker = '+', label = 'Gate station')        
-plt.scatter(Gxm, Gym, 200, 'green', marker = '*', label = 'Regulator Station')        
-plt.scatter(Gxd, Gyd, 100, 'green', marker = 'o', label = 'Deliver Station')        
-        
-        
-
-for j in range(len(Gasedge)):
-    plt.plot([Gx[Gasedge[j, 0]], Gx[Gasedge[j, 1]]], [Gy[Gasedge[j, 0]], Gy[Gasedge[j, 1]]], color = 'black')
-plt.legend(bbox_to_anchor=(0, 1), loc='upper left', ncol=1, fontsize = 15, frameon = 0)
+#
+##------------------------------------------------------------------------------
+#plt.figure(figsize = (20, 12))
+#Base = bm.BaseMapSet(dt.Type1, dt.llon, dt.rlon, dt.llat, dt.rlat)
+#
+#Wx, Wy = Base(Wlon, Wlat)
+#Px, Py = Base(Plon, Plat)
+#Gx, Gy = Base(Glon, Glat)
+#
+###Water network
+#Wnum = len(Wlat)
+#Wxs, Wxm, Wxd = [], [], []
+#Wys, Wym, Wyd = [], [], []
+#for i in range(len(Wx)):
+#    if(Wtype[i] == "Pump Stations"):
+#        Wxs.append(Wx[i])
+#        Wys.append(Wy[i])
+#    if(Wtype[i] == "Storage Tanks"):
+#        Wxm.append(Wx[i])
+#        Wym.append(Wy[i])
+#    if(Wtype[i] == "Delivery Nodes"):
+#        Wxd.append(Wx[i])
+#        Wyd.append(Wy[i])
+#        
+##Distance and adjacent matrix
+#Wadjmatrix, Wdistmatrix = np.zeros((Wnum, ))
+#for i in range(len())
+#        
+#plt.scatter(Wxs, Wys, 400, 'blue' , marker = '+', label = 'Pumping station')        
+#plt.scatter(Wxm, Wym, 200, 'blue', marker = '*', label = 'Storage tank')        
+#plt.scatter(Wxd, Wyd, 100, 'blue', marker = 'o', label = 'Delivery station')        
+#        
+#        
+#for j in range(len(Wateredge)):
+#    plt.plot([Wx[Wateredge[j, 0]], Wx[Wateredge[j, 1]]], [Wy[Wateredge[j, 0]], Wy[Wateredge[j, 1]]], color = 'black')
+#plt.legend(bbox_to_anchor=(0, 1), loc='upper left', ncol=1, fontsize = 15, frameon = 0)
+#
+#
+#
+###Power network
+#plt.figure(figsize = (20, 12))
+#Base = BaseMapSet('local')
+#Pxs, Pxm, Pxd = [], [], []
+#Pys, Pym, Pyd = [], [], []
+#for i in range(len(Px)):
+#    if(Ptype[i] == "Gate Station"):
+#        Pxs.append(Px[i])
+#        Pys.append(Py[i])
+#    if(Ptype[i] == "Intersection Point"):
+#        Pxm.append(Px[i])
+#        Pym.append(Py[i])
+#    if(Ptype[i] == "23kV Substation" or Ptype[i] == "12kV Substation"):
+#        Pxd.append(Px[i])
+#        Pyd.append(Py[i])
+#        
+#plt.scatter(Pxs, Pys, 400, 'red' , marker = '+', label = 'Power Plant')        
+#plt.scatter(Pxm, Pym, 200, 'red', marker = '*', label = '12 or 23kV Substation')        
+#plt.scatter(Pxd, Pyd, 100, 'red', marker = 'o', label = 'Deliver Station')        
+#        
+#        
+#
+#for j in range(len(Poweredge)):
+#    plt.plot([Px[Poweredge[j, 0]], Px[Poweredge[j, 1]]], [Py[Poweredge[j, 0]], Py[Poweredge[j, 1]]], color = 'black')
+#plt.legend(bbox_to_anchor=(0, 1), loc='upper left', ncol=1, fontsize = 25, frameon = 0)
+#plt.savefig("Power network.png", dpi = 2000) 
+#
+###Gas network
+#plt.figure(figsize = (20, 12))
+#Base = BaseMapSet('local')
+#Gxs, Gxm, Gxd = [], [], []
+#Gys, Gym, Gyd = [], [], []
+#for i in range(len(Gx)):
+#    if(Gtype[i] == "Gate Station"):
+#        Gxs.append(Gx[i])
+#        Gys.append(Gy[i])
+#    if(Gtype[i] == "Regulator Station"):
+#        Gxm.append(Gx[i])
+#        Gym.append(Gy[i])
+#    if(Gtype[i] == "Other"):
+#        Gxd.append(Gx[i])
+#        Gyd.append(Gy[i])
+#        
+#plt.scatter(Gxs, Gys, 400, 'green' , marker = '+', label = 'Gate station')        
+#plt.scatter(Gxm, Gym, 200, 'green', marker = '*', label = 'Regulator Station')        
+#plt.scatter(Gxd, Gyd, 100, 'green', marker = 'o', label = 'Deliver Station')        
+#        
+#        
+#
+#for j in range(len(Gasedge)):
+#    plt.plot([Gx[Gasedge[j, 0]], Gx[Gasedge[j, 1]]], [Gy[Gasedge[j, 0]], Gy[Gasedge[j, 1]]], color = 'black')
+#plt.legend(bbox_to_anchor=(0, 1), loc='upper left', ncol=1, fontsize = 15, frameon = 0)
 
 
 ####Calculate the topological features

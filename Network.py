@@ -9,6 +9,7 @@ import numpy as np
 import Basemapset as bm
 from matplotlib import pyplot as plt
 import annealsimulation as ans
+import data as dt
 
 class network:
     """Initiate the class of the network
@@ -27,6 +28,8 @@ class network:
         self.supplyseries  = np.arange(0, self.supplynum, 1)
         self.supplytranseries = np.concatenate((self.supplyseries, self.transeries))
         self.trandemandseries = np.concatenate((self.transeries, self.demandseries))
+        
+        self.edgediameter = netdata["edgediameter"]
         
         
         self.color = netdata["color"]
@@ -219,7 +222,22 @@ class network:
 #                    self.degree[minindex[j]] = splitlist[j]
 #            self.Adjmatrix[self.transeries[i], minindex] = 1
 ##            self.degree[self.transeries[i]] = d
-            
+                
+    def create_edgelist(self):
+        """Define the edge list of the network
+        Input: the adjacent matrix of the network
+        Output: the edge list of the network: list of python dictionary, the dimenstion of the list is the number of edges, the dictionary has the following keys
+                [start node, end node, length, edgediameter, X of the middle point, Y of the middle point] 
+        """
+        self.edgelist = []
+        
+        for i in range(len(self.Adjmatrix)):
+            for j in range(len(self.Adjmatrix)):
+                if(self.Adjmatrix[i, j] == 1):
+                    middlex = 0.5*(self.x[i] + self.x[j])
+                    middley = 0.5*(self.y[i] + self.y[j])
+                    self.edgelist.append({"start node": i, "end node": j, "link length": self.Dismatrix[i, j], "edgediameter": self.edgediameter, "middlex": middlex, "middley": middley})
+                    
     def NPL(self):
         """Calculate the normalized physical length of all edges in the network
         """
@@ -442,6 +460,41 @@ class network:
         self.cluster_cal()
         self.topo_diameter()
         self.spatial_diameter()
+        
+    def network_setup(self, Tract_density, Tractx, Tracty, i):
+        """Initialize everything for networks: location, distance matrix, degreesequence, cost, cluster_coeff, efficiency, diameter
+        Input: Tract_density - 1D numpy array: population data of each tract in the area
+               Tractx - 1D numpy array
+               Tracty - 1D numpy array
+               i - the number of the network in the system: i = 1, 2, 3 representing water, power and gas
+        
+        Output: \
+        """
+        self.Nodelocation(Tract_density, Tractx, Tracty)
+        self.Distmatrix()
+        
+        #Decision of network adjacent matrix of three networks
+        while(1):
+            self.sampleseq = np.random.poisson(dt.fitdegree[i], size = self.nodenum)
+            if(self.sampleseq.all() != 0):
+                #if(np.max(self.sampleseq) >= 5):
+                    #continue
+                break
+        
+        self.connection(self.sampleseq, dt.num)
+        self.create_edgelist()
+        self.degree, self.Ndegree = sf.degreeNdegree(self.Adjmatrix)
+        
+        #Plot each single infrastructure network
+#       self.drawnetwork(dt.Type1, dt.llon, dt.rlon, dt.llat, dt.rlat)
+        #plt.savefig("{} network.png".format(self.name), dpi = 2000)
+        
+        ##Calculate the network topology features
+        self.cal_topology_feature()
+        self.cost_cal(dt.Type2, Tract_density, Tractx, Tracty)
+#       self.cost_cal(dt.Type2, Tract_pop, Tractx, Tracty)
+        
+
         
     
     

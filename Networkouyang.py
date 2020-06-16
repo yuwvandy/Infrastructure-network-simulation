@@ -12,6 +12,7 @@ import Sharefunction as sf
 import Basemapset as bm
 import annealsimulation as ans
 from matplotlib import pyplot as plt
+import data as dt
 
 
 class network2:
@@ -321,3 +322,28 @@ class network2:
         self.cluster_cal()
         self.topo_diameter()
         self.spatial_diameter()
+        
+    def network_setup(self, Tract_density, Tractx, Tracty):
+        """Initialize everything for networks: location, distance matrix, degreesequence, cost, cluster_coeff, efficiency, diameter
+        Input: Tract_density - 1D numpy array: population data of each tract in the area
+               Tractx - 1D numpy array
+               Tracty - 1D numpy array
+        
+        Output: \
+        """
+        
+        self.Nodeloc()
+        self.Connect(dt.m)
+        
+        self.degreeNdegree()
+        #Network.plotnetwork(dt.Type1, dt.llon, dt.rlon, dt.llat, dt.rlat)
+        
+        ##Calculate the network topology features
+        self.cal_topology_feature()
+        #self.cost_cal(dt.Type2, Tract_pop, Tractx, Tracty)
+        self.cost_cal(dt.Type2, Tract_density, Tractx, Tracty)
+        
+        
+        
+        
+        

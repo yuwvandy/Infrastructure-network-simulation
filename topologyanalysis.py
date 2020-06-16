@@ -43,7 +43,6 @@ for i in range(len(lon)):
 
 for i in range(len(lat)):
     temp, Geoy[i] = Base(0, lat[i])
-    
 
 topo_eff1, topo_eff2 = [[], [], []], [[], [], []]
 
@@ -72,30 +71,7 @@ while(Temp <= 50):
     for i in range(len(Network_obj)):
         #Decision of facility location of three networks
         Network = Network_obj[i]
-        Network.Nodelocation(Tract_density, Tractx, Tracty)
-#        Network.Nodelocation(Tract_pop, Tractx, Tracty)
-#        Network.drawlocation(dt.Type1, dt.llon, dt.rlon, dt.llat, dt.rlat)
-        Network.Distmatrix()
-    
-        #Decision of network adjacent matrix of three networks
-        while(1):
-            Network.sampleseq = np.random.poisson(dt.fitdegree[i], size = Network.nodenum)
-            if(Network.sampleseq.all() != 0):
-                #if(np.max(Network.sampleseq) >= 5):
-                    #continue
-                break
-                
-        Network.connection(Network.sampleseq, dt.num)
-        Network.degree, Network.Ndegree = sf.degreeNdegree(Network.Adjmatrix)
-        
-        #Plot each single infrastructure network
-#        Network.drawnetwork(dt.Type1, dt.llon, dt.rlon, dt.llat, dt.rlat)
-        #plt.savefig("{} network.png".format(Network.name), dpi = 2000)
-        
-        ##Calculate the network topology features
-        Network.cal_topology_feature()
-        Network.cost_cal(dt.Type2, Tract_density, Tractx, Tracty)
-#        Network.cost_cal(dt.Type2, Tract_pop, Tractx, Tracty)
+        Network.network_setup(Tract_density, Tractx, Tracty, i)
         
         topo_eff1[i].append(Network.topo_efficiency)
         eff1[i].append(Network.efficiency)
@@ -117,16 +93,7 @@ while(Temp <= 50):
     for i in range(len(Network2object)):
         Network = Network2object[i]
         
-        Network.Nodeloc()
-        Network.Connect(dt.m)
-        
-        Network.degreeNdegree()
-    #    Network.plotnetwork(dt.Type1, dt.llon, dt.rlon, dt.llat, dt.rlat)
-        
-        ##Calculate the network topology features
-        Network.cal_topology_feature()
-#        Network.cost_cal(dt.Type2, Tract_pop, Tractx, Tracty)
-        Network.cost_cal(dt.Type2, Tract_density, Tractx, Tracty)
+        Network.network_setup(Tract_density, Tractx, Tracty)
         
         topo_eff2[i].append(Network.topo_efficiency)
         eff2[i].append(Network.efficiency)
