@@ -1,3 +1,4 @@
+module sf
 function list_adj(adjmatrix)
     #= Construct the adj2list map and list2adj map based on adjmatrix
     Input: adjmatrix - 2D array, the adjacent matrix of a network or a dependent network
@@ -6,7 +7,7 @@ function list_adj(adjmatrix)
     =#
     rownum, columnnum = size(adjmatrix)[1], size(adjmatrix)[2]
     adj2list = Array{Int64}(undef, rownum, columnnum)
-    list2adj = Array{Int64}(undef, sum(adjmatrix), 2)
+    list2adj = Array{Int64}(undef, Int64(sum(adjmatrix)), 2)
 
     temp = 0
     for i in range(1, rownum)
@@ -16,9 +17,13 @@ function list_adj(adjmatrix)
 
                 adj2list[i, j] = temp
                 list2adj[temp, 1], list2adj[temp, 2] = i, j
+            else
+                adj2list[i, j] = 0
+
             end
         end
     end
 
     return adj2list, list2adj
+end
 end
