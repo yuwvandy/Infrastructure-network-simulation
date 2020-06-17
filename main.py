@@ -17,8 +17,7 @@ from Networkouyang import network2
 import numpy as np
 import seaborn as sns
 import scipy
-from interdependency import phynode2node
-from interdependency import phynode2link
+from interdependency import phynode2node, phynode2link
 
 #--------------------Set up the Basemap where all networks and systems are set up
 Base = bm.BaseMapSet(dt.Type1, dt.llon, dt.rlon, dt.llat, dt.rlat)
@@ -49,8 +48,8 @@ Gas = network(dt.gas1para, Geox, Geoy)
 networklist = [Water, Power, Gas]
 
 #Calculate the node locations and topology features
-for i in range(len(network)):
-    Network = network[i]
+for i in range(len(networklist)):
+    Network = networklist[i]
     Network.network_setup(Tract_density, Tractx, Tracty, i)
 
 #Initialilze the dependency of power supply nodes on gas demand nodes for generating electricity
