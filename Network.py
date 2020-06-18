@@ -36,6 +36,12 @@ class network:
         self.Geox = Geox
         self.Geoy = Geoy
     
+        #pack network features into dictionary
+        self.datadict = {'name': self.name, 'supplyname': self.supplyname, 'tranname': self.tranname, 'demandname': self.demandname, 
+                        'nodenum': self.nodenum, 'demandnum': self.demandnum, 'trannum': self.trannum, 'supplynum': self.supplynum,
+                        "demandseries": self.demandseries, 'transeries': self.transeries, 'supplyseries': self.supplyseries,
+                        "edgediameter": self.edgediameter, 'color': self.color}
+        
     def Nodelocation(self, Tract_pop, Tractx, Tracty):
         """Annealing simulation to decide the node location
         """

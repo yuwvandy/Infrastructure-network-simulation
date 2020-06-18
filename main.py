@@ -67,18 +67,22 @@ pdemand2wlink = phynode2link(Power, Water, dt.para_pdemand2wlink)
 interdependency = [gdemand2psupply, wdemand2psupply, pdemand2glink, pdemand2wlink]
 
 #Save all data required for solving nonlinear optimization in julia
+#Network information
+for Network in networklist:
+    sf.savenetworkfeature(Network)
+
 #interdependency
 for i in range(len(interdependency)):
-    path1 = '.\\p2jdata\\' + interdependency[i].name + 'adj.csv'
-    path2 = '.\\p2jdata\\' + interdependency[i].name + 'distnode2node.csv'  
+    path1 = './p2jdata/adjdist/' + interdependency[i].name + 'adj.csv'
+    path2 = './p2jdata/adjdist/' + interdependency[i].name + 'distnode2node.csv'  
     np.savetxt(path1, interdependency[i].adjmatrix, delimiter = ',')
     np.savetxt(path2, interdependency[i].distmatrix, delimiter = ',')
 
     
 #network adjmatrix
 for i in range(len(networklist)):
-    path1 = '.\\p2jdata\\' + networklist[i].name + 'adj.csv'
-    path2 = '.\\p2jdata\\' + networklist[i].name + 'distnode2node.csv'
+    path1 = './p2jdata/adjdist/' + networklist[i].name + 'adj.csv'
+    path2 = './p2jdata/adjdist/' + networklist[i].name + 'distnode2node.csv'
     np.savetxt(path1, networklist[i].Adjmatrix, delimiter = ',')
     np.savetxt(path2, networklist[i].Dismatrix, delimiter = ',')
     

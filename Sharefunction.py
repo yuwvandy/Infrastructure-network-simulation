@@ -167,6 +167,23 @@ def list2dataframe(List, value, key1, key2):
     
     return mylist
 
+def savenetworkfeature(network):
+    """Summarize the network features and pack them into a dictionary, save the dictionary file using CSV in p2jdata folder
+    Input: network - object, containing all information of the network
+    Output: None, but the CSV file is in the .\p2jdata folder
+    """
+    import csv
+    
+    #save the dictionary into CSV file
+    with open('./p2jdata/networkinfo/{}data.csv'.format(network.datadict['name']), 'w', newline = '\n') as f:
+        writer = csv.writer(f)
+        for key, value in network.datadict.items():
+            if(isinstance(value, np.ndarray)): #Transform numpy.array to list so that there is no linebreak in the exported CSV file, and the data imported by reading the CSV file will not have "\n"
+                writer.writerow([key, list(value)])
+            else:
+                writer.writerow([key, value])
+    
+
 
     
 
