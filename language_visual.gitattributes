@@ -1,0 +1,2 @@
+*.py linguist-detectable = false
+*.jl linguist-detectable = true
