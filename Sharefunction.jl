@@ -47,27 +47,27 @@ module sf
         end
         return dict
     end
-
-    function array2dict(array, index1, index2)
-        #= Construct the dictionary of the network information
-        Input: array - 2D array of the network information
-               index - the index of the network feature which requires number type of structure to save, not string
-        Output: dictionary of the network information
-        =#
-        dict = Dict()
-        for i in 1:(size(array)[1])
-            if(i >= index1[1] && i <= index1[2])
-                if( i >= index2[1] && i <= index2[2])
-                    dict[array[i, 1]] = eval(Meta.parse(array[i, 2])).+1 #the difference of the start index between python and julia
-                else
-                    dict[array[i, 1]] = eval(Meta.parse(array[i, 2]))
-                end
-            else
-                dict[array[i, 1]] = array[i, 2]
-            end
-        end
-        return dict
-    end
+    #
+    # function array2dict(array, index1, index2)
+    #     #= Construct the dictionary of the network information
+    #     Input: array - 2D array of the network information
+    #            index - the index of the network feature which requires number type of structure to save, not string
+    #     Output: dictionary of the network information
+    #     =#
+    #     dict = Dict()
+    #     for i in 1:(size(array)[1])
+    #         if(i >= index1[1] && i <= index1[2])
+    #             if( i >= index2[1] && i <= index2[2])
+    #                 dict[array[i, 1]] = eval(Meta.parse(array[i, 2])).+1 #the difference of the start index between python and julia
+    #             else
+    #                 dict[array[i, 1]] = eval(Meta.parse(array[i, 2]))
+    #             end
+    #         else
+    #             dict[array[i, 1]] = array[i, 2]
+    #         end
+    #     end
+    #     return dict
+    # end
 
     function tranflowinout(Dict, Flow, Adj, adj2list)
         #= Set up the flow iterms going into and out of the transmission nodes
@@ -92,6 +92,13 @@ module sf
                     push!(flowoutnode, Flow[adj2list[trannum, j]])
                 end
             end
+            if(length(flowinnode) == 0)
+                push!(flowinnode, 0)
+            end
+            if(length(flowoutnode) == 0)
+                push!(flowinnode, 0)
+            end
+
             push!(flowin, flowinnode)
             push!(flowout, flowoutnode)
         end
@@ -121,6 +128,14 @@ module sf
                     push!(flowoutnode, Flow[adj2list[demandnum, j]])
                 end
             end
+
+            if(length(flowinnode) == 0)
+                push!(flowinnode, 0)
+            end
+            if(length(flowoutnode) == 0)
+                push!(flowinnode, 0)
+            end
+
             push!(flowin, flowinnode)
             push!(flowout, flowoutnode)
         end
@@ -143,6 +158,11 @@ module sf
                     push!(flowoutnode, interflow[adj2list[i, j]])
                 end
             end
+
+            if(length(flowoutnode) == 0)
+                push!(flowoutnode, 0)
+            end
+
             push!(flowout, flowoutnode)
         end
         return flowout

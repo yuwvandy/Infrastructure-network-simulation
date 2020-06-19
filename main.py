@@ -50,7 +50,7 @@ networklist = [Water, Power, Gas]
 #Calculate the node locations and topology features
 for i in range(len(networklist)):
     Network = networklist[i]
-    Network.network_setup(Tract_density, Tractx, Tracty, i)
+    Network.network_setup(Tract_pop, Tractx, Tracty, i)
 
 #Initialilze the dependency of power supply nodes on gas demand nodes for generating electricity
 gdemand2psupply = phynode2node(Gas, Power, dt.para_gdemand2psupply)
@@ -69,6 +69,7 @@ interdependency = [gdemand2psupply, wdemand2psupply, pdemand2glink, pdemand2wlin
 #Save all data required for solving nonlinear optimization in julia
 #Network information
 for Network in networklist:
+    Network.datacollection()
     sf.savenetworkfeature(Network)
 
 #interdependency

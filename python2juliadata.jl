@@ -29,6 +29,6 @@ end
 
 
 #network information transformation: array 2 dict
-Gasdict = sf.array2dict(Gasdata, [5, 12], [9, 11])
-Powerdict = sf.array2dict(Powerdata, [5, 12], [9, 11])
-Waterdict = sf.array2dict(Waterdata, [5, 12], [9, 11])
+Gasdict = sf.array2dict(Gasdata, [5, 13], [9, 11])
+Powerdict = sf.array2dict(Powerdata, [5, 13], [9, 11])
+Waterdict = sf.array2dict(Waterdata, [5, 13], [9, 11])

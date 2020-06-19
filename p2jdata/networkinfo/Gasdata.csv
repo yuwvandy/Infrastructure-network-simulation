@@ -10,4 +10,5 @@ demandseries,"[10, 11, 12, 13, 14, 15]"
 transeries,"[3, 4, 5, 6, 7, 8, 9]"
 supplyseries,"[0, 1, 2]"
 edgediameter,5
+population_assignment,"[263665.0, 85042.0, 375899.0, 101873.0, 29118.0, 72047.0]"
 color,green

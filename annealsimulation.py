@@ -14,26 +14,34 @@ import math
 import copy
 import numpy as np
 
-def cost(sol, Geox, Geoy, PD, Type, Tractx, Tracty):
-    """Calculate the overall cost all a new solution: two type: demand-population, supply-transmission(transmission-demand)
-    sol: new solution: location in the form of the index
-    lat, lon: the latitude and longitude of the small pixel in the basemap (the lat and lon of the sublevel facilities)
-    LAT, LON: the latitude and longitude of the small pixel in the basemap
+def cost(sol, Geox, Geoy, PD, Type, Tractx, Tracty, PD_beforenormalize):
+    """Calculate the overall cost of a new solution: two type: demand-population, supply-transmission(transmission-demand)
+    Input: sol - new solution: location in the form of the index
+           Geox -
+           Geoy -
+           PD -
+           Type -
+           Tractx -
+           Tracty -
+    Output: cost of the new solution and the population assignment for the demand nodes of the new solution
     """
+    Popu_assign = np.zeros(len(sol))
     Sum_Cost = 0
+    
     for i in range(len(Tractx)):
         Min_Dist = math.inf
         for k in range(len(sol)):
             Dist = math.sqrt((Tracty[i] - Geoy[sol[k][0]])**2 + (Tractx[i] - Geox[sol[k][1]])**2)
             if(Dist < Min_Dist):
                 Min_Dist = Dist
-#                index = k
+                index = k
         if(Type == 'Population'):
             Sum_Cost += Min_Dist*PD[i]
+            Popu_assign[index] += PD_beforenormalize[i]
         else:
             Sum_Cost += Min_Dist
                 
-    return Sum_Cost
+    return Sum_Cost, Popu_assign
     
 def neighbor1(sol, Geox, Geoy, T, direc, step, c, Time):
     """Explore the neighborhood of the current solution
@@ -149,10 +157,10 @@ def anneal1(sol, Type, Geox, Geoy, PD, Tractx, Tracty):
         T = T*alpha
     return sol, c
 
-def anneal2(sol, Type, Geox, Geoy, PD, Tractx, Tracty):
+def anneal2(sol, Type, Geox, Geoy, PD, Tractx, Tracty, PD_beforenormalize):
 #    normalized_factor = (Geoy[-1]**2+Geox[-1]**2)**0.5*np.max(PD)
     c = []
-    old_cost = cost(sol, Geox, Geoy, PD, Type, Tractx, Tracty)
+    old_cost, Popu_assign = cost(sol, Geox, Geoy, PD, Type, Tractx, Tracty, PD_beforenormalize)
     c.append(old_cost)
     Time = 1
     T = 1.0
@@ -171,7 +179,7 @@ def anneal2(sol, Type, Geox, Geoy, PD, Tractx, Tracty):
             Iter = 10 #800
         while i <= Iter:
             new_sol = neighbor2(sol, Geox, Geoy, T)
-            new_cost = cost(new_sol, Geox, Geoy, PD, Type, Tractx, Tracty)
+            new_cost, Popu_assign = cost(new_sol, Geox, Geoy, PD, Type, Tractx, Tracty, PD_beforenormalize)
             ap = acceptance_probability(old_cost, new_cost, T)
             if(ap >= np.random.rand()):
                 sol = new_sol
@@ -184,5 +192,5 @@ def anneal2(sol, Type, Geox, Geoy, PD, Tractx, Tracty):
 
             
         T = T*alpha
-    return sol, c
+    return sol, c, Popu_assign
     

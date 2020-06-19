@@ -36,11 +36,6 @@ class network:
         self.Geox = Geox
         self.Geoy = Geoy
     
-        #pack network features into dictionary
-        self.datadict = {'name': self.name, 'supplyname': self.supplyname, 'tranname': self.tranname, 'demandname': self.demandname, 
-                        'nodenum': self.nodenum, 'demandnum': self.demandnum, 'trannum': self.trannum, 'supplynum': self.supplynum,
-                        "demandseries": self.demandseries, 'transeries': self.transeries, 'supplyseries': self.supplyseries,
-                        "edgediameter": self.edgediameter, 'color': self.color}
         
     def Nodelocation(self, Tract_pop, Tractx, Tracty):
         """Annealing simulation to decide the node location
@@ -73,20 +68,20 @@ class network:
         Tractx1 = sf.FeatureScaling(Tractx)
         Tracty1 = sf.FeatureScaling(Tracty)
         
-        self.demandloc, self.demandc = ans.anneal2(self.demandloc, 'Population', Geox1, Geoy1, Tract_pop1, Tractx1, Tracty1)
+        self.demandloc, self.demandc, self.popuassign = ans.anneal2(self.demandloc, 'Population', Geox1, Geoy1, Tract_pop1, Tractx1, Tracty1, Tract_pop)
         self.demandy1 = Geoy1[self.demandloc[:, 0]]
         self.demandx1 = Geox1[self.demandloc[:, 1]]
         self.demandy = self.Geoy[self.demandloc[:, 0]]
         self.demandx = self.Geox[self.demandloc[:, 1]]
         #Transmission node
-        self.tranloc, self.tranc = ans.anneal2(self.tranloc, 'Facility', Geox1, Geoy1, Tract_pop1, self.demandx1, self.demandy1)
+        self.tranloc, self.tranc, temp = ans.anneal2(self.tranloc, 'Facility', Geox1, Geoy1, Tract_pop1, self.demandx1, self.demandy1, Tract_pop)
         self.trany1 = Geoy1[self.tranloc[:, 0]]
         self.tranx1 = Geox1[self.tranloc[:, 1]]
         self.trany = self.Geoy[self.tranloc[:, 0]]
         self.tranx = self.Geox[self.tranloc[:, 1]]
 
         #Supply node
-        self.supplyloc, self.supplyc = ans.anneal2(self.supplyloc, 'Facility', Geox1, Geoy1, Tract_pop1, self.tranx1, self.trany1)
+        self.supplyloc, self.supplyc, temp = ans.anneal2(self.supplyloc, 'Facility', Geox1, Geoy1, Tract_pop1, self.tranx1, self.trany1, Tract_pop)
         self.supplyy1 = Geoy1[self.supplyloc[:, 0]]
         self.supplyx1 = Geox1[self.supplyloc[:, 1]]    
         self.supplyy = self.Geoy[self.supplyloc[:, 0]]
@@ -449,7 +444,7 @@ class network:
         Tractx1 = sf.FeatureScaling(Tractx)
         Tracty1 = sf.FeatureScaling(Tracty)
         
-        self.cost = ans.cost(self.demandloc, Geox1, Geoy1, Tract_pop1, Type, Tractx1, Tracty1)
+        self.cost, temp = ans.cost(self.demandloc, Geox1, Geoy1, Tract_pop1, Type, Tractx1, Tracty1, Tract_pop)
         
     def cal_topology_feature(self):
         """Calculate the topology features of the network
@@ -500,10 +495,18 @@ class network:
         self.cost_cal(dt.Type2, Tract_density, Tractx, Tracty)
 #       self.cost_cal(dt.Type2, Tract_pop, Tractx, Tracty)
         
-
+    def datacollection(self):
+        """Collect the necessary information of the network features and package them into a dictionary for optimization in julia
+        Input: self.features......
         
-    
-    
+        Output: dictionary of the network features
+        """
+        
+        self.datadict = {'name': self.name, 'supplyname': self.supplyname, 'tranname': self.tranname, 'demandname': self.demandname, 
+                        'nodenum': self.nodenum, 'demandnum': self.demandnum, 'trannum': self.trannum, 'supplynum': self.supplynum,
+                        "demandseries": self.demandseries, 'transeries': self.transeries, 'supplyseries': self.supplyseries,
+                        "edgediameter": self.edgediameter, 'population_assignment': self.popuassign, 'color': self.color}
+
         
         
         
