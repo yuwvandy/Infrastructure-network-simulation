@@ -8,23 +8,27 @@ using Formatting
 #adjacent and distance matrix
 path = string(pwd(), "/p2jdata/adjdist")
 filelist = readdir(path)
+filepath = Array{String}(undef, length(filelist))
 
-for i in range(1, length(filelist))
-    print(filelist[i])
+for i in 1:length(filelist)
     varname = chop(filelist[i], tail = 4)
-    temppath = string(path, "/$(filelist[i])")
-    CSV.read(temppath, datarow = 1)
-    eval(Meta.parse("$(varname) = Matrix(CSV.read(temppath, datarow = 1))"))
+    filepath[i] = string(path, "/$(filelist[i])")
+    eval(Meta.parse("$(varname) = Matrix(CSV.read(filepath[$(i)], datarow = 1))"))
 end
-
 
 #network information
 path = string(pwd(), "/p2jdata/networkinfo")
 filelist = readdir(path)
+filepath = Array{String}(undef, length(filelist))
 
-for i in range(1, length(filelist))
-    print(filelist[i])
+for i in 1:length(filelist)
     varname = chop(filelist[i], tail = 4)
-    temppath = string(path, "/$(filelist[i])")
-    eval(Meta.parse("$(varname) = Matrix(CSV.read(temppath, datarow = 1))"))
+    filepath[i] = string(path, "/$(filelist[i])")
+    eval(Meta.parse("$(varname) = Matrix(CSV.read(filepath[$(i)], datarow = 1))"))
 end
+
+
+#network information transformation: array 2 dict
+Gasdict = sf.array2dict(Gasdata, [5, 12], [9, 11])
+Powerdict = sf.array2dict(Powerdata, [5, 12], [9, 11])
+Waterdict = sf.array2dict(Waterdata, [5, 12], [9, 11])
