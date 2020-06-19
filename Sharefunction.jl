@@ -97,4 +97,54 @@ module sf
         end
         return flowin, flowout
     end
+
+    function demandflowinout(Dict, Flow, Adj, adj2list)
+        #= Set up the flow iterms going into and out of the demand nodes
+        Input: Dict - Dictionary of the network information
+               Flow - The flow variable set up for the optimization problem
+               Adj - 2D array, the adjacent matrix of the network
+               adj2list - the map from the adjacent matrix to flow list
+        Output: the array of flow going into and out of certain nodes
+        =#
+        flowin = []
+        flowout = []
+        for i in 1:Dict["demandnum"]
+            demandnum = Dict["demandseries"][i]
+
+            flowinnode = []
+            flowoutnode = []
+            for j in 1:Dict["nodenum"]
+                if(Adj[j, demandnum] == 1)
+                    push!(flowinnode, Flow[adj2list[j, demandnum]])
+                end
+                if(Adj[demandnum, j] == 1)
+                    push!(flowoutnode, Flow[adj2list[demandnum, j]])
+                end
+            end
+            push!(flowin, flowinnode)
+            push!(flowout, flowoutnode)
+        end
+        return flowin, flowout
+    end
+
+    function demandinterflowout(interadj, dict1, dict2, interflow, adj2list)
+        #= Set up the flow iterms going out from the demand nodes in network1 to supply nodes in network2, network1 -> network2
+        Input: interadj - 2D array, the adjacent matrix of the interdependent network: demand nodes in network 2 -> supply nodes in network1
+               interflow - The flow variable on interdependent links
+               adj2list - the map from the adjacent matrix to flow list
+               dict1, dict2 - the dictionary information of network1 and network2
+        Output: the array of flow going out from demand nodes in network1 -> supply nodes in network2
+        =#
+        flowout = []
+        for i in 1:dict1["demandnum"]
+            flowoutnode = []
+            for j in 1:dict2["supplynum"]
+                if(interadj[i, j] == 1)
+                    push!(flowoutnode, interflow[adj2list[i, j]])
+                end
+            end
+            push!(flowout, flowoutnode)
+        end
+        return flowout
+    end
 end

@@ -44,7 +44,14 @@ Wtflowin, Wtflowout = sf.tranflowinout(Waterdict, Wflow, Wateradj, Wadj2list)
 #for transmission nodes in gas networks
 Gtflowin, Gtflowout = sf.tranflowinout(Gasdict, Gflow, Gasadj, Gadj2list)
 @constraint(mp, Gtconserve[i = 1:length(Gtflowin)], sum(Gtflowin[i]) == sum(Gtflowout[i]))
-#flow conservation for gas transmission nodes
+
+#for demand nodes in water networks
+#flow in and out within the water networks
+Wdflowin, Wdflowout1 = sf.demandflowinout(Waterdict, Wflow, Wateradj, Wadj2list)
+#flow: water demand -> power supply
+Wdflowout2 = sf.demandinterflowout(wdemand2psupplyadj, Waterdict, Powerdict, WPflow, WPadj2list)
+#flow: water demand -> residents
+Wdflowout3 =
 
 #flow conservation for water demand nodes
 
