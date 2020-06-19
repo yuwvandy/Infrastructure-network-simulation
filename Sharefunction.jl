@@ -193,4 +193,124 @@ module sf
         end
         return flowin
     end
+
+    function pdemandwlinkflowout(demand2linkadj, flow, dict, link2nodeid, distnode2node)
+        #= Set up the power required for transport water in water networks
+        Input: demand2linkadj: the adj matrix from demand nodes in network1 to the links in networks
+               flow: the flow variable generated for optimization in network2
+               link2nodeid: the function mapping the link in network2 to the nodes at the ends of the links in network2
+               distnode2node: the distance between nodes in network2
+        Output: flow going out of the demand node in network1, height and distance to calculate the energy loss
+        =#
+        flowout = []
+        H1 = []
+        H2 = []
+        L = []
+        for i in 1:size(demand2linkadj)[1]
+            flowoutnode = []
+            H1node, H2node = [], []
+            Lnode = []
+            for j in 1:size(demand2linkadj)[2]
+                if(demand2linkadj[i, j] == 1)
+                    push!(flowoutnode, flow[j])
+                    push!(H1node, dict["elevation"][Int64(link2nodeid[j, 1])])
+                    push!(H2node, dict["elevation"][Int64(link2nodeid[j, 2])])
+                    push!(Lnode, distnode2node[Int64(link2nodeid[j, 1]), Int64(link2nodeid[j, 2])])
+                end
+            end
+            push!(flowout, flowoutnode)
+            push!(H1, H1node)
+            push!(H2, H2node)
+            push!(L, Lnode)
+        end
+        return flowout, H1, H2, L
+    end
+
+    function pdemandwpinterlinkflowout(demand2linkadj, flow, dict1, dict2, link2nodeid, distnode2node)
+        #= Set up the power required for transport water flow between water and power networks
+        Input: demand2linkadj: the adj matrix from demand nodes in network3 to the interdependent links between network1 and 2
+               flow: the flow variable generated for optimization in internetwork
+               link2nodeid: the function mapping the link in internetwork to the nodes at the ends of the links in network1 and 2
+               distnode2node: the distance between nodes in network1 and nodes in network2
+        Output: flow going out of the demand node in network3, height and distance to calculate the energy loss
+        =#
+        flowout = []
+        H1 = []
+        H2 = []
+        L = []
+        for i in 1:size(demand2linkadj)[1]
+            flowoutnode = []
+            H1node, H2node = [], []
+            Lnode = []
+            for j in 1:size(demand2linkadj)[2]
+                if(demand2linkadj[i, j] == 1)
+                    push!(flowoutnode, flow[j])
+                    push!(H1node, dict1["elevation"][dict1["demandseries"][Int64(link2nodeid[j, 1])]])
+                    push!(H2node, dict2["elevation"][dict2["supplyseries"][Int64(link2nodeid[j, 2])]])
+                    push!(Lnode, distnode2node[Int64(link2nodeid[j, 1]), Int64(link2nodeid[j, 2])])
+                end
+            end
+            push!(flowout, flowoutnode)
+            push!(H1, H1node)
+            push!(H2, H2node)
+            push!(L, Lnode)
+        end
+        return flowout, H1, H2, L
+    end
+
+    function pdemandglinkflowout(demand2linkadj, flow, Pr, link2nodeid)
+        #= Set up the power required for transport Gas in Gas networks
+        Input: demand2linkadj: the adj matrix from demand nodes in network1 to the links in networks
+               flow: the flow variable generated for optimization in network2
+               Pr: the pressure variable generated for optimization in network2
+        Output: flow and pressure of links depending on demand nodes in network1
+        =#
+        flowout = []
+        Pr1 = []
+        Pr2 = []
+        for i in 1:size(demand2linkadj)[1]
+            flowoutnode = []
+            Pr1node, Pr2node = [], []
+            for j in 1:size(demand2linkadj)[2]
+                if(demand2linkadj[i, j] == 1)
+                    push!(flowoutnode, flow[j])
+                    push!(Pr1node, Pr[Int64(link2nodeid[j, 1])])
+                    push!(Pr2node, Pr[Int64(link2nodeid[j, 2])])
+                end
+            end
+            push!(flowout, flowoutnode)
+            push!(Pr1, Pr1node)
+            push!(Pr2, Pr2node)
+        end
+        return flowout, Pr1, Pr2
+    end
+
+    function pdemandgpinterlinkflowout(demand2linkadj, flow, pr1, pr2, dict1, dict2, link2nodeid)
+        #= Set up the power required for transport gas flow between gas and power networks
+        Input: demand2linkadj: the adj matrix from demand nodes in network3 to the interdependent links between network1 and 2
+               flow: the flow variable generated for optimization in internetwork
+               link2nodeid: the function mapping the link in internetwork to the nodes at the ends of the links in network1 and 2
+               pr1: the pressure variable in gas networks
+               pr2: the pressure variable in power networks (power supply nodes)
+        Output: flow going out of the demand node in network3, height and distance to calculate the energy loss
+        =#
+        flowout = []
+        Pr1 = []
+        Pr2 = []
+        for i in 1:size(demand2linkadj)[1]
+            flowoutnode = []
+            Pr1node, Pr2node = [], []
+            for j in 1:size(demand2linkadj)[2]
+                if(demand2linkadj[i, j] == 1)
+                    push!(flowoutnode, flow[j])
+                    push!(Pr1, pr1[dict1["demandseries"][Int64(link2nodeid[j, 1])]])
+                    push!(Pr2, pr2[dict2["supplyseries"][Int64(link2nodeid[j, 2])]])
+                end
+            end
+            push!(flowout, flowoutnode)
+            push!(Pr1, Pr1node)
+            push!(Pr2, Pr2node)
+        end
+        return flowout, Pr1, Pr2
+    end
 end

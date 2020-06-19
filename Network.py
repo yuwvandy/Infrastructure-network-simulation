@@ -501,7 +501,7 @@ class network:
         """
         self.Nodelocation(Tract_density, Tractx, Tracty, lon, lat)
         ##from GOOGLE API get the elevation
-#        self.GoogleAPIele()
+        self.GoogleAPIele()
         self.Distmatrix()
         
         #Decision of network adjacent matrix of three networks
@@ -536,8 +536,4 @@ class network:
                         'nodenum': self.nodenum, 'demandnum': self.demandnum, 'trannum': self.trannum, 'supplynum': self.supplynum,
                         "demandseries": self.demandseries, 'transeries': self.transeries, 'supplyseries': self.supplyseries,
                         "edgediameter": self.edgediameter, 'population_assignment': self.popuassign, 'elevation': self.elevation, 'color': self.color}
-
-        
-        
-        
         

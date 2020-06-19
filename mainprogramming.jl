@@ -19,6 +19,9 @@ PGadj2list, PGlist2adj = sf.list_adj(pdemand2glinkadj)
 PWadj2list, PWlist2adj = sf.list_adj(pdemand2wlinkadj)
 WPadj2list, WPlist2adj = sf.list_adj(wdemand2psupplyadj)
 
+PWinterlinkadj2list, PWinterlinkadjlist2adj = sf.list_adj(pdemand2wpinterlinkadj)
+PGinterlinkadj2list, PGinterlinklist2adj = sf.list_adj(pdemand2gpinterlinkadj)
+
 #Model set up
 mp = Model(Juniper.Optimizer)
 
@@ -28,6 +31,7 @@ mp = Model(Juniper.Optimizer)
 @variable(mp, Pload[1:pnum])
 @variable(mp, Wflow[1:size(Wlist2adj)[1]] >= 0)
 @variable(mp, Gpr[1:gnum] >= 0)
+@variable(mp, Ppr[1:psupplynum] >= 0)
 #between network
 @variable(mp, GPflow[1:size(GPlist2adj)[1]] >= 0)
 @variable(mp, PGload[1:size(PGlist2adj)[1]] >= 0)
@@ -71,9 +75,14 @@ GdflowinPs = sf.supplyinterflowin(gdemand2psupplyadj, Gasdict, Powerdict, GPflow
 WdflowinPs = sf.supplyinterflowin(wdemand2psupplyadj, Waterdict, Powerdict, WPflow, WPadj2list)
 @constraint(mp, WdPsinter[i = 1:Powerdict["supplynum"]], sum(WdflowinPs[i]) == data.kapa*Pload[i])
 
-###------------------dependency of gas links on power demand nodes
-
 ###------------------dependency of water links on power demand nodes
+#water links in water networks
+PdWlflowout1, H1_1, H2_1, L_1 = sf.pdemandwlinkflowout(pdemand2wlinkadj, Wflow, Waterdict, pdemand2wlinklink2nodeid, Waterdistnode2node)
+#water links from water demand nodes to power supply nodes
+PdWlflowout2, H1_2, H2_2, L_2 = sf.pdemandwpinterlinkflowout(pdemand2wpinterlinkadj, WPflow, Waterdict, Powerdict, pdemand2wpinterlinklink2nodeid, wdemand2psupplydistnode2node)
 
-###------------------relationship between pressure and gas flow of gas links
-###
+###-----------------dependency of gas links on power demand nodes
+#gas links in gas networks
+PdGlflowout1, Pr1_1, Pr2_1 = sf.pdemandglinkflowout(pdemand2glinkadj, Gflow, Gpr, pdemand2glinklink2nodeid)
+#gas links from gas demand nodes to power supply nodes
+PdGlflowout2, Pr1_2, Pr2_2 = sf.pdemandgpinterlinkflowout(pdemand2gpinterlinkadj, GPflow, Gpr, Ppr, Gasdict, Powerdict, pdemand2gpinterlinklink2nodeid)

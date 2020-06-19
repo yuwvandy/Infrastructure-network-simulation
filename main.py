@@ -82,8 +82,13 @@ for Network in networklist:
 for i in range(len(interdependency)):
     path1 = './p2jdata/adjdist/' + interdependency[i].name + 'adj.csv'
     path2 = './p2jdata/adjdist/' + interdependency[i].name + 'distnode2node.csv'  
+    
     np.savetxt(path1, interdependency[i].adjmatrix, delimiter = ',')
     np.savetxt(path2, interdependency[i].distmatrix, delimiter = ',')
+    
+    if(i >= 2):
+        path3 = './p2jdata/adjdist/' + interdependency[i].name + 'link2nodeid.csv'
+        np.savetxt(path3, interdependency[i].link2nodeid + 1, delimiter = ',')
 
     
 #network adjmatrix

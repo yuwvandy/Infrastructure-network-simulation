@@ -84,6 +84,7 @@ class phynode2link():
         
         self.Distmatrix()
         self.Adjmatrix()
+        self.link2node()
     
     def Distmatrix(self):
         """Define the distance matrix of this dependency
@@ -107,6 +108,16 @@ class phynode2link():
         for i in range(self.linknum2):
             minindex = np.array(sf.minimumk(self.distmatrix[:, i], self.nearestnum))
             self.adjmatrix[minindex, i] = 1
+    
+    def link2node(self):
+        """Define the link2nodeid, given the link number, output the node id on the two ends of the link
+        """
+        self.link2nodeid = np.zeros((self.linknum2, 2), dtype = int)
+        
+        for i in range(self.linknum2):
+            self.link2nodeid[i, 0] = self.network2.edgelist[i]["start node"]
+            self.link2nodeid[i, 1] = self.network2.edgelist[i]["end node"]
+            
         
             
 #-----------------------------------------------------phynode2interlink dependency
@@ -127,6 +138,7 @@ class phynode2interlink():
         
         self.Distmatrix()
         self.Adjmatrix()
+        self.link2node()
     
     def Distmatrix(self):
         """Define the distance matrix of this dependency
@@ -150,6 +162,15 @@ class phynode2interlink():
         for i in range(self.linknum):
             minindex = np.array(sf.minimumk(self.distmatrix[:, i], self.nearestnum))
             self.adjmatrix[minindex, i] = 1
+            
+    def link2node(self):
+        """Define the link2nodeid, given the link number, output the node id on the two ends of the link
+        """
+        self.link2nodeid = np.zeros((self.linknum, 2), dtype = int)
+        
+        for i in range(self.linknum):
+            self.link2nodeid[i, 0] = self.internet1net2.edgelist[i]["start node"]
+            self.link2nodeid[i, 1] = self.internet1net2.edgelist[i]["end node"]
     
 
         
