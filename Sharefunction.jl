@@ -167,4 +167,30 @@ module sf
         end
         return flowout
     end
+
+    function supplyinterflowin(interadj, dict1, dict2, interflow, adj2list)
+        #= Set up the flow iterms going into the supply nodes in network2 from demand nodes in network1
+        Input: interadj - 2D array, the adjacent matrix of the interdependent network: demand nodes in network 2 -> supply nodes in network1
+               interflow - The flow variable on interdependent links
+               adj2list - the map from the adjacent matrix to flow list
+               dict1, dict2 - the dictionary information of network1 and network2
+        Output: the array of flow going out from demand nodes in network1 -> supply nodes in network2
+        =#
+        flowin = []
+        for i in 1:dict2["supplynum"]
+            flowinnode = []
+            for j in 1:dict1["demandnum"]
+                if(interadj[j, i] == 1)
+                    push!(flowinnode, interflow[adj2list[j, i]])
+                end
+            end
+
+            if(length(flowinnode) == 0)
+                push!(flowinnode, 0)
+            end
+
+            push!(flowin, flowinnode)
+        end
+        return flowin
+    end
 end

@@ -36,14 +36,14 @@ mp = Model(Juniper.Optimizer)
 
 
 #------------------------------------------------Constraints
-###flow conservation
+###------------------flow conservation
 #for transmission nodes in water networks
 Wtflowin, Wtflowout = sf.tranflowinout(Waterdict, Wflow, Wateradj, Wadj2list)
-@constraint(mp, Wtconserve[i = 1:length(Wtflowin)], sum(Wtflowin[i]) == sum(Wtflowout[i]))
+@constraint(mp, Wtconserve[i = 1:Waterdict["trannum"]], sum(Wtflowin[i]) == sum(Wtflowout[i]))
 
 #for transmission nodes in gas networks
 Gtflowin, Gtflowout = sf.tranflowinout(Gasdict, Gflow, Gasadj, Gadj2list)
-@constraint(mp, Gtconserve[i = 1:length(Gtflowin)], sum(Gtflowin[i]) == sum(Gtflowout[i]))
+@constraint(mp, Gtconserve[i = 1:Gasdict["trannum"]], sum(Gtflowin[i]) == sum(Gtflowout[i]))
 
 #for demand nodes in water networks
 #flow in and out within demand nodes in the water networks
@@ -52,18 +52,28 @@ Wdflowin, Wdflowout1 = sf.demandflowinout(Waterdict, Wflow, Wateradj, Wadj2list)
 Wdflowout2 = sf.demandinterflowout(wdemand2psupplyadj, Waterdict, Powerdict, WPflow, WPadj2list)
 #flow: water demand -> residents
 Wdflowout3 = Waterdict["population_assignment"]
-@constraint(mp, Wdconserve[i = 1:length(Wdflowin)], sum(Wdflowin[i]) == sum(Wdflowout2[i]) + sum(Wdflowout3[i]))
+@constraint(mp, Wdconserve[i = 1:Waterdict["demandnum"]], sum(Wdflowin[i]) == sum(Wdflowout2[i]) + sum(Wdflowout3[i]))
 
 #for demand nodes in gas networks
 #flow in and out within demand nodes in the gas networks
 Gdflowin, Gdflowout1 = sf.demandflowinout(Gasdict, Gflow, Gasadj, Gadj2list)
 #flow: gas demand -> power supply
-Gdflowout2 = sf.demandinterflowout(gdemand2psupplyadj, Gasdict, Gasdict, GPflow, GPadj2list)
+Gdflowout2 = sf.demandinterflowout(gdemand2psupplyadj, Gasdict, Powerdict, GPflow, GPadj2list)
 #flow: Gas demand -> residents
 Gdflowout3 = Gasdict["population_assignment"]
-@constraint(mp, Gdconserve[i = 1:length(Gdflowin)], sum(Gdflowin[i]) == sum(Gdflowout2[i]) + sum(Gdflowout3[i]))
+@constraint(mp, Gdconserve[i = 1:Gasdict["demandnum"]], sum(Gdflowin[i]) == sum(Gdflowout2[i]) + sum(Gdflowout3[i]))
 
+###------------------dependency of power supply nodes on gas demand nodes
+GdflowinPs = sf.supplyinterflowin(gdemand2psupplyadj, Gasdict, Powerdict, GPflow, GPadj2list)
+@constraint(mp, GdPsinter[i = 1:Powerdict["supplynum"]], sum(GdflowinPs[i]) == 1/data.H*(data.au + data.bu*Pload[i] + data.cu*Pload[i]^2))
 
-#flow conservation for water demand nodes
+###------------------dependency of power supply nodes on water demand nodes
+WdflowinPs = sf.supplyinterflowin(wdemand2psupplyadj, Waterdict, Powerdict, WPflow, WPadj2list)
+@constraint(mp, WdPsinter[i = 1:Powerdict["supplynum"]], sum(WdflowinPs[i]) == data.kapa*Pload[i])
 
-#flow conservation for gas demand nodes
+###------------------dependency of gas links on power demand nodes
+
+###------------------dependency of water links on power demand nodes
+
+###------------------relationship between pressure and gas flow of gas links
+###
