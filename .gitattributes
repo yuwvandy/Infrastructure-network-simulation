@@ -1,2 +1,2 @@
-* linguist-vendored
-*.jl linguist-vendored=false
+*.jl linguist-detectable=true
+*.py linguist-detectable=false
