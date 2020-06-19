@@ -157,3 +157,10 @@ para_pdemand2glink = {"Name": "pdemand2glink",
 
 para_pdemand2wlink = {"Name": "pdemand2wlink", 
                         "dependnum": 4}
+
+para_pdemand2wpinterlink = {"Name": "pdemand2wpinterlink",
+                       "dependnum": 4}
+
+
+para_pdemand2gpinterlink = {"Name": "pdemand2gpinterlink",
+                       "dependnum": 4}

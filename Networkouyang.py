@@ -323,7 +323,7 @@ class network2:
         self.topo_diameter()
         self.spatial_diameter()
         
-    def network_setup(self, Tract_density, Tractx, Tracty):
+    def network_setup(self, Tract_density, Tractx, Tracty, ):
         """Initialize everything for networks: location, distance matrix, degreesequence, cost, cluster_coeff, efficiency, diameter
         Input: Tract_density - 1D numpy array: population data of each tract in the area
                Tractx - 1D numpy array

@@ -17,7 +17,7 @@ from Networkouyang import network2
 import numpy as np
 import seaborn as sns
 import scipy
-from interdependency import phynode2node, phynode2link
+from interdependency import phynode2node, phynode2link, phynode2interlink
 
 #--------------------Set up the Basemap where all networks and systems are set up
 Base = bm.BaseMapSet(dt.Type1, dt.llon, dt.rlon, dt.llat, dt.rlat)
@@ -50,7 +50,7 @@ networklist = [Water, Power, Gas]
 #Calculate the node locations and topology features
 for i in range(len(networklist)):
     Network = networklist[i]
-    Network.network_setup(Tract_pop, Tractx, Tracty, i)
+    Network.network_setup(Tract_pop, Tractx, Tracty, i, lon, lat)
 
 #Initialilze the dependency of power supply nodes on gas demand nodes for generating electricity
 gdemand2psupply = phynode2node(Gas, Power, dt.para_gdemand2psupply)
@@ -64,7 +64,13 @@ pdemand2glink = phynode2link(Power, Gas, dt.para_pdemand2glink)
 #Initialilze the dependency of water links on power demand nodes for overcome energy loss
 pdemand2wlink = phynode2link(Power, Water, dt.para_pdemand2wlink)
 
-interdependency = [gdemand2psupply, wdemand2psupply, pdemand2glink, pdemand2wlink]
+#Initialilze the dependency of water-power links on power demand nodes for overcome energy loss
+pdemand2wpinterlink = phynode2interlink(wdemand2psupply, Power, dt.para_pdemand2wpinterlink)
+
+#Initialilze the dependency of gas-power links on power demand nodes for increasing pressure
+pdemand2gpinterlink = phynode2interlink(gdemand2psupply, Power, dt.para_pdemand2gpinterlink)
+
+interdependency = [gdemand2psupply, wdemand2psupply, pdemand2glink, pdemand2wlink, pdemand2wpinterlink, pdemand2gpinterlink]
 
 #Save all data required for solving nonlinear optimization in julia
 #Network information

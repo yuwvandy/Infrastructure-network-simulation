@@ -37,7 +37,7 @@ class network:
         self.Geoy = Geoy
     
         
-    def Nodelocation(self, Tract_pop, Tractx, Tracty):
+    def Nodelocation(self, Tract_pop, Tractx, Tracty, longitude, latitude):
         """Annealing simulation to decide the node location
         """
         import annealsimulation
@@ -90,6 +90,34 @@ class network:
         ##Coordinates of nodes
         self.y = np.concatenate((self.supplyy, self.trany, self.demandy))
         self.x = np.concatenate((self.supplyx, self.tranx, self.demandx))
+        
+        ##Latitudes and longitudes of nodes
+        self.demandlatitude, self.demandlongitude = latitude[self.demandloc[:, 0]], longitude[self.demandloc[:, 1]]
+        self.tranlatitude, self.tranlongitude = latitude[self.tranloc[:, 0]], longitude[self.tranloc[:, 1]]
+        self.supplylatitude, self.supplylongitude = latitude[self.supplyloc[:, 0]], longitude[self.supplyloc[:, 1]]
+        
+        self.latitude = np.concatenate((self.supplylatitude, self.tranlatitude, self.demandlatitude))
+        self.longitude = np.concatenate((self.supplylongitude, self.tranlongitude, self.demandlongitude))
+    
+    def GoogleAPIele(self):
+        """Get the elevation data based on the latitude and longitude from Google API
+        """
+        import urllib.request
+        import json
+        
+        self.elevation = []
+        Base_url = "https://maps.googleapis.com/maps/api/elevation/json?locations="
+        APIkey = "&key=AIzaSyDOo1DAojYoYf3WCcadLrsl9PZbnougbtE"
+        
+        for i in range(self.nodenum):
+            Para_url = "%s,%s" % (self.latitude[i], self.longitude[i])
+            url = Base_url + Para_url + APIkey
+            
+            with urllib.request.urlopen(url) as f:
+                response = json.loads(f.read().decode())
+            
+            self.elevation.append(response['results'][0]['elevation'])
+            
         
     def drawlocation(self, Type, llon, rlon, llat, rlat):
         """Scatter the facility of the infrastructure system
@@ -462,7 +490,7 @@ class network:
         self.topo_diameter()
         self.spatial_diameter()
         
-    def network_setup(self, Tract_density, Tractx, Tracty, i):
+    def network_setup(self, Tract_density, Tractx, Tracty, i, lon, lat):
         """Initialize everything for networks: location, distance matrix, degreesequence, cost, cluster_coeff, efficiency, diameter
         Input: Tract_density - 1D numpy array: population data of each tract in the area
                Tractx - 1D numpy array
@@ -471,7 +499,9 @@ class network:
         
         Output: \
         """
-        self.Nodelocation(Tract_density, Tractx, Tracty)
+        self.Nodelocation(Tract_density, Tractx, Tracty, lon, lat)
+        ##from GOOGLE API get the elevation
+#        self.GoogleAPIele()
         self.Distmatrix()
         
         #Decision of network adjacent matrix of three networks
@@ -505,7 +535,7 @@ class network:
         self.datadict = {'name': self.name, 'supplyname': self.supplyname, 'tranname': self.tranname, 'demandname': self.demandname, 
                         'nodenum': self.nodenum, 'demandnum': self.demandnum, 'trannum': self.trannum, 'supplynum': self.supplynum,
                         "demandseries": self.demandseries, 'transeries': self.transeries, 'supplyseries': self.supplyseries,
-                        "edgediameter": self.edgediameter, 'population_assignment': self.popuassign, 'color': self.color}
+                        "edgediameter": self.edgediameter, 'population_assignment': self.popuassign, 'elevation': self.elevation, 'color': self.color}
 
         
         
