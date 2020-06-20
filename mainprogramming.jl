@@ -43,11 +43,11 @@ mp = Model(Juniper.Optimizer)
 ###------------------flow conservation
 #for transmission nodes in water networks
 Wtflowin, Wtflowout = sf.tranflowinout(Waterdict, Wflow, Wateradj, Wadj2list)
-@constraint(mp, Wtconserve[i = 1:Waterdict["trannum"]], sum(Wtflowin[i]) == sum(Wtflowout[i]))
+@constraint(mp, Wtconserve[i = 1:wtransnum], sum(Wtflowin[i]) == sum(Wtflowout[i]))
 
 #for transmission nodes in gas networks
 Gtflowin, Gtflowout = sf.tranflowinout(Gasdict, Gflow, Gasadj, Gadj2list)
-@constraint(mp, Gtconserve[i = 1:Gasdict["trannum"]], sum(Gtflowin[i]) == sum(Gtflowout[i]))
+@constraint(mp, Gtconserve[i = 1:gtransnum], sum(Gtflowin[i]) == sum(Gtflowout[i]))
 
 #for demand nodes in water networks
 #flow in and out within demand nodes in the water networks
@@ -56,7 +56,7 @@ Wdflowin, Wdflowout1 = sf.demandflowinout(Waterdict, Wflow, Wateradj, Wadj2list)
 Wdflowout2 = sf.demandinterflowout(wdemand2psupplyadj, Waterdict, Powerdict, WPflow, WPadj2list)
 #flow: water demand -> residents
 Wdflowout3 = Waterdict["population_assignment"]
-@constraint(mp, Wdconserve[i = 1:Waterdict["demandnum"]], sum(Wdflowin[i]) == sum(Wdflowout2[i]) + sum(Wdflowout3[i]))
+@constraint(mp, Wdconserve[i = 1:wdemandnum], sum(Wdflowin[i]) == sum(Wdflowout2[i]) + sum(Wdflowout3[i]))
 
 #for demand nodes in gas networks
 #flow in and out within demand nodes in the gas networks
@@ -65,15 +65,19 @@ Gdflowin, Gdflowout1 = sf.demandflowinout(Gasdict, Gflow, Gasadj, Gadj2list)
 Gdflowout2 = sf.demandinterflowout(gdemand2psupplyadj, Gasdict, Powerdict, GPflow, GPadj2list)
 #flow: Gas demand -> residents
 Gdflowout3 = Gasdict["population_assignment"]
-@constraint(mp, Gdconserve[i = 1:Gasdict["demandnum"]], sum(Gdflowin[i]) == sum(Gdflowout2[i]) + sum(Gdflowout3[i]))
+@constraint(mp, Gdconserve[i = 1:gdemandnum], sum(Gdflowin[i]) == sum(Gdflowout2[i]) + sum(Gdflowout3[i]))
+
+#for demand and supply nodes in power networks
+#power load of demand nodes equal to the power load of supply nodes
+@constraint(mp, Pdsconserve, sum(Pload[Powerdict["supplyseries"][i]] for i in 1:length(psupplynum)) == sum(Pload[Powerdict["demandseries"][i]] for i in 1:length(pdemandnum)))
 
 ###------------------dependency of power supply nodes on gas demand nodes
 GdflowinPs = sf.supplyinterflowin(gdemand2psupplyadj, Gasdict, Powerdict, GPflow, GPadj2list)
-@constraint(mp, GdPsinter[i = 1:Powerdict["supplynum"]], sum(GdflowinPs[i]) == 1/dt.H*(dt.au + dt.bu*Pload[i] + dt.cu*Pload[i]^2))
+@NLconstraint(mp, GdPsinter[i = 1:psupplynum], sum(GdflowinPs[i][j] for j in 1:length(GdflowinPs[i])) == 1/dt.H*(dt.au + dt.bu*Pload[i] + dt.cu*Pload[i]^2))
 
 ###------------------dependency of power supply nodes on water demand nodes
 WdflowinPs = sf.supplyinterflowin(wdemand2psupplyadj, Waterdict, Powerdict, WPflow, WPadj2list)
-@constraint(mp, WdPsinter[i = 1:Powerdict["supplynum"]], sum(WdflowinPs[i]) == dt.kapa*Pload[i])
+@constraint(mp, WdPsinter[i = 1:psupplynum], sum(WdflowinPs[i]) == dt.kapa*Pload[i])
 
 ###------------------dependency of water links on power demand nodes
 #water links in water networks
@@ -93,10 +97,15 @@ PdGlflowout2, Pr1_2, Pr2_2 = sf.pdemandgpinterlinkflowout(pdemand2gpinterlinkadj
 PdGlflowout2, Pr1_2, Pr2_2 = sf.zeropad(PdGlflowout2), sf.zeropad(Pr1_2), sf.zeropad(Pr2_2)
 
 
-@NLconstraint(mp, Pdwglink[i = 1:pdemandnum], sum(dt.wdensity*dt.g*PdWlflowout1[i][j]*(H2_1[i][j] - H1_1[i][j]) for j in 1:length(H2_1[i])) + 
+@NLconstraint(mp, Pdwglink[i = 1:pdemandnum], sum(dt.wdensity*dt.g*PdWlflowout1[i][j]*(H2_1[i][j] - H1_1[i][j]) for j in 1:length(H2_1[i])) +
             sum(10.654*(PdWlflowout1[i][j]/dt.beta)^1.852*(L_1[i][j]/Waterdict["edgediameter"]) for j in 1:length(H2_1[i])) +
             sum(dt.wdensity*dt.g*PdWlflowout2[i][j]*(H2_2[i][j] - H1_2[i][j]) for j in 1:length(H2_2[i])) +
             sum(10.654*(PdWlflowout2[i][j]/dt.beta)^1.852*(L_2[i][j]/Waterdict["edgediameter"]) for j in 1:length(H2_2[i])) +
-            sum((dt.Z*dt.Rs*dt.T/((dt.K - 1)*dt.K)*((Pr2_1[i][j]/Pr1_1[i][j])^((dt.K-1)/dt.K) - 1))*PdGlflowout1[i][j]/(33000*dt.elta) for j in 1:length(Pr2_1[i])) +
-            sum((dt.Z*dt.Rs*dt.T/((dt.K - 1)*dt.K)*((Pr2_2[i][j]/Pr1_2[i][j])^((dt.K-1)/dt.K) - 1))*PdGlflowout2[i][j]/(33000*dt.elta) for j in 1:length(Pr2_2[i]))
-            == 1)
+            sum((dt.Z*dt.R*dt.T/((dt.K - 1)*dt.K)*((Pr2_1[i][j]/Pr1_1[i][j])^((dt.K-1)/dt.K) - 1))*PdGlflowout1[i][j]/(33000*dt.elta) for j in 1:length(Pr2_1[i])) +
+            sum((dt.Z*dt.R*dt.T/((dt.K - 1)*dt.K)*((Pr2_2[i][j]/Pr1_2[i][j])^((dt.K-1)/dt.K) - 1))*PdGlflowout2[i][j]/(33000*dt.elta) for j in 1:length(Pr2_2[i])) +
+            Powerdict["population_assignment"][i] == Pload[Powerdict["demandseries"][i]])
+
+#pressure and flow constraint in gas networks
+@NLconstraint(mp, Glinkprflow[i = 1:length(Gflow)], Gflow[i] == dt.delta1*dt.e*(Gasdict["edgediameter"])^dt.delta2*(dt.Ts/dt.Prs)^dt.delta3*((Gpr[Glist2adj[i, 1]]^2 - Gpr[Glist2adj[i, 2]]^2)/(dt.xi^dt.delta4*Gasdistnode2node[Glist2adj[i, 1], Glist2adj[i, 2]]*dt.T*dt.phi))^dt.delta5)
+#pressure and flow constraint in interdependent gas-power networks
+@NLconstraint(mp, G2Plinkprflow[i = 1:length(GPflow)], GPflow[i] == dt.delta1*dt.e*(Gasdict["edgediameter"])^dt.delta2*(dt.Ts/dt.Prs)^dt.delta3*((Gpr[Gasdict["demandseries"][GPlist2adj[i, 1]]]^2 - Ppr[Powerdict["supplyseries"][GPlist2adj[i, 2]]]^2)/(dt.xi^dt.delta4*gdemand2psupplydistnode2node[GPlist2adj[i, 1], GPlist2adj[i, 2]]*dt.T*dt.phi))^dt.delta5)
