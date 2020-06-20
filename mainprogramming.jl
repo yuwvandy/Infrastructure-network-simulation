@@ -69,11 +69,11 @@ Gdflowout3 = Gasdict["population_assignment"]
 
 ###------------------dependency of power supply nodes on gas demand nodes
 GdflowinPs = sf.supplyinterflowin(gdemand2psupplyadj, Gasdict, Powerdict, GPflow, GPadj2list)
-@constraint(mp, GdPsinter[i = 1:Powerdict["supplynum"]], sum(GdflowinPs[i]) == 1/data.H*(data.au + data.bu*Pload[i] + data.cu*Pload[i]^2))
+@constraint(mp, GdPsinter[i = 1:Powerdict["supplynum"]], sum(GdflowinPs[i]) == 1/dt.H*(dt.au + dt.bu*Pload[i] + dt.cu*Pload[i]^2))
 
 ###------------------dependency of power supply nodes on water demand nodes
 WdflowinPs = sf.supplyinterflowin(wdemand2psupplyadj, Waterdict, Powerdict, WPflow, WPadj2list)
-@constraint(mp, WdPsinter[i = 1:Powerdict["supplynum"]], sum(WdflowinPs[i]) == data.kapa*Pload[i])
+@constraint(mp, WdPsinter[i = 1:Powerdict["supplynum"]], sum(WdflowinPs[i]) == dt.kapa*Pload[i])
 
 ###------------------dependency of water links on power demand nodes
 #water links in water networks
@@ -81,8 +81,22 @@ PdWlflowout1, H1_1, H2_1, L_1 = sf.pdemandwlinkflowout(pdemand2wlinkadj, Wflow, 
 #water links from water demand nodes to power supply nodes
 PdWlflowout2, H1_2, H2_2, L_2 = sf.pdemandwpinterlinkflowout(pdemand2wpinterlinkadj, WPflow, Waterdict, Powerdict, pdemand2wpinterlinklink2nodeid, wdemand2psupplydistnode2node)
 
+PdWlflowout1, H1_1, H2_1, L_1 = sf.zeropad(PdWlflowout1), sf.zeropad(H1_1), sf.zeropad(H2_1), sf.zeropad(L_1)
+PdWlflowout2, H1_2, H2_2, L_2 = sf.zeropad(PdWlflowout2), sf.zeropad(H1_2), sf.zeropad(H2_2), sf.zeropad(L_2)
+
 ###-----------------dependency of gas links on power demand nodes
 #gas links in gas networks
 PdGlflowout1, Pr1_1, Pr2_1 = sf.pdemandglinkflowout(pdemand2glinkadj, Gflow, Gpr, pdemand2glinklink2nodeid)
+PdGlflowout1, Pr1_1, Pr2_1 = sf.zeropad(PdGlflowout1), sf.zeropad(Pr1_1), sf.zeropad(Pr2_1)
 #gas links from gas demand nodes to power supply nodes
 PdGlflowout2, Pr1_2, Pr2_2 = sf.pdemandgpinterlinkflowout(pdemand2gpinterlinkadj, GPflow, Gpr, Ppr, Gasdict, Powerdict, pdemand2gpinterlinklink2nodeid)
+PdGlflowout2, Pr1_2, Pr2_2 = sf.zeropad(PdGlflowout2), sf.zeropad(Pr1_2), sf.zeropad(Pr2_2)
+
+
+@NLconstraint(mp, Pdwglink[i = 1:pdemandnum], sum(dt.wdensity*dt.g*PdWlflowout1[i][j]*(H2_1[i][j] - H1_1[i][j]) for j in 1:length(H2_1[i])) + 
+            sum(10.654*(PdWlflowout1[i][j]/dt.beta)^1.852*(L_1[i][j]/Waterdict["edgediameter"]) for j in 1:length(H2_1[i])) +
+            sum(dt.wdensity*dt.g*PdWlflowout2[i][j]*(H2_2[i][j] - H1_2[i][j]) for j in 1:length(H2_2[i])) +
+            sum(10.654*(PdWlflowout2[i][j]/dt.beta)^1.852*(L_2[i][j]/Waterdict["edgediameter"]) for j in 1:length(H2_2[i])) +
+            sum((dt.Z*dt.Rs*dt.T/((dt.K - 1)*dt.K)*((Pr2_1[i][j]/Pr1_1[i][j])^((dt.K-1)/dt.K) - 1))*PdGlflowout1[i][j]/(33000*dt.elta) for j in 1:length(Pr2_1[i])) +
+            sum((dt.Z*dt.Rs*dt.T/((dt.K - 1)*dt.K)*((Pr2_2[i][j]/Pr1_2[i][j])^((dt.K-1)/dt.K) - 1))*PdGlflowout2[i][j]/(33000*dt.elta) for j in 1:length(Pr2_2[i]))
+            == 1)

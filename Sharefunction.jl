@@ -303,8 +303,8 @@ module sf
             for j in 1:size(demand2linkadj)[2]
                 if(demand2linkadj[i, j] == 1)
                     push!(flowoutnode, flow[j])
-                    push!(Pr1, pr1[dict1["demandseries"][Int64(link2nodeid[j, 1])]])
-                    push!(Pr2, pr2[dict2["supplyseries"][Int64(link2nodeid[j, 2])]])
+                    push!(Pr1node, pr1[dict1["demandseries"][Int64(link2nodeid[j, 1])]])
+                    push!(Pr2node, pr2[dict2["supplyseries"][Int64(link2nodeid[j, 2])]])
                 end
             end
             push!(flowout, flowoutnode)
@@ -312,5 +312,18 @@ module sf
             push!(Pr2, Pr2node)
         end
         return flowout, Pr1, Pr2
+    end
+
+    function zeropad(array)
+        #=add zero element to the none entry of the array
+        Input: array - 1D array
+        Output: the updated array where the none entry originally becomes 0 entry
+        =#
+        for i in 1:length(array)
+            if(length(array[i]) == 0)
+                array[i] = [0]
+            end
+        end
+        return array
     end
 end
