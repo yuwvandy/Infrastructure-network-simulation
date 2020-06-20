@@ -109,3 +109,9 @@ PdGlflowout2, Pr1_2, Pr2_2 = sf.zeropad(PdGlflowout2), sf.zeropad(Pr1_2), sf.zer
 @NLconstraint(mp, Glinkprflow[i = 1:length(Gflow)], Gflow[i] == dt.delta1*dt.e*(Gasdict["edgediameter"])^dt.delta2*(dt.Ts/dt.Prs)^dt.delta3*((Gpr[Glist2adj[i, 1]]^2 - Gpr[Glist2adj[i, 2]]^2)/(dt.xi^dt.delta4*Gasdistnode2node[Glist2adj[i, 1], Glist2adj[i, 2]]*dt.T*dt.phi))^dt.delta5)
 #pressure and flow constraint in interdependent gas-power networks
 @NLconstraint(mp, G2Plinkprflow[i = 1:length(GPflow)], GPflow[i] == dt.delta1*dt.e*(Gasdict["edgediameter"])^dt.delta2*(dt.Ts/dt.Prs)^dt.delta3*((Gpr[Gasdict["demandseries"][GPlist2adj[i, 1]]]^2 - Ppr[Powerdict["supplyseries"][GPlist2adj[i, 2]]]^2)/(dt.xi^dt.delta4*gdemand2psupplydistnode2node[GPlist2adj[i, 1], GPlist2adj[i, 2]]*dt.T*dt.phi))^dt.delta5)
+
+@objective(mp, Min, sum(Wflow[i]*Waterdistnode2node[Wlist2adj[i, 1], Wlist2adj[i, 2]] for i in 1:length(Wflow))*dt.cw +
+                    sum(Gflow[i]*Gasdistnode2node[Glist2adj[i, 1], Glist2adj[i, 2]] for i in 1:length(Gflow))*dt.cg +
+                    sum(Pload[i] for i in Powerdict["supplyseries"])*dt.cp +
+                    sum(WPflow[i]*wdemand2psupplydistnode2node[WPlist2adj[i, 1], WPlist2adj[i, 2]] for i in 1:length(WPflow))*dt.cw +
+                    sum(GPflow[i]*gdemand2psupplydistnode2node[GPlist2adj[i, 1], GPlist2adj[i, 2]] for i in 1:length(GPflow))*dt.cg)

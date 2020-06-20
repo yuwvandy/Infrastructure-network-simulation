@@ -23,4 +23,7 @@ xi = 0.5537# (pure methane) the specific gravity of gas, relative to air: the ra
 phi = 1.0 #gas compressibility: different from the gas compressibility factor Z above
 Ts = 520 #Temperature at standard condition: Rankine
 Prs = 14.73 #Pressure at standard condition: psia
+
+#For objective (equation (29))
+cw, cg, cp = 1, 1, 1 #the cost of transport single unit of flow per unit distance
 end
