@@ -17,7 +17,7 @@ g = 9.8 #gravity acceleration
 beta = 130 #based on the materials of the pipelines, the values of different materials are listed in URL:https://www.engineeringtoolbox.com/hazen-williams-coefficients-d_798.html
 
 #For equation (19): gas pressure and gas flow
-delta1, delta2, delta3, delta4, delta5 = 18.0625, 2.6667, 1.0, 1.0, 0.5 #Take the method of Weymouth
+delta1, delta2, delta3, delta4, delta5 = 18.0625, 2.6667, 1.0, 1.0, 1.0 #Take the method of Weymouth
 e = 0.92 #efficiency factor of the gas pipelines
 xi = 0.5537# (pure methane) the specific gravity of gas, relative to air: the ratio of the density of the gas at standard pressure and temperature to the density of air
 phi = 1.0 #gas compressibility: different from the gas compressibility factor Z above
