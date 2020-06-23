@@ -24,9 +24,13 @@ A methodological framework which can simulate infrastructure networks and their 
 * python2juliadata.jl: the function to import network data from python to julia
 * Sharefunction.jl: the general functions which are shared by all julia scripts in the project
 * dataopt.jl: the value of the parameters in the optimization
+**** 
 ### Folder of data
 * Edges.xlsx, Nodes.xlsx: the pipeline (grid) and facility information of the gas, power and water infrastructure networks in Shelby County
 * Tract.xlsx: The population distribution in Shelby County
+**** 
+### Folder of PDF
+* Interdependent_network_optimization for network flow.pdf: the mathematical formalization of the network flow optimization problem
 
 ## 4. To run
 First load all modules except the Shelby_County_network.py, the topologyanalysis.py, main.py, mainprogramming.jl
