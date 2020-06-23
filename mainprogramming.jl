@@ -99,20 +99,20 @@ PdGlflowout2, Pr1_2, Pr2_2 = sf.pdemandgpinterlinkflowout(pdemand2gpinterlinkadj
 PdGlflowout2, Pr1_2, Pr2_2 = sf.zeropad(PdGlflowout2), sf.zeropad(Pr1_2), sf.zeropad(Pr2_2)
 
 
-# @NLconstraint(mp, Pdwglink[i = 1:pdemandnum], sum(dt.wdensity*dt.g*PdWlflowout1[i][j]*(H2_1[i][j] - H1_1[i][j]) for j in 1:length(H2_1[i])) +
-#             sum(10.654*(PdWlflowout1[i][j]/dt.beta)^1.852*(L_1[i][j]/Waterdict["edgediameter"]) for j in 1:length(H2_1[i])) +
-#             sum(dt.wdensity*dt.g*PdWlflowout2[i][j]*(H2_2[i][j] - H1_2[i][j]) for j in 1:length(H2_2[i])) +
-#             sum(10.654*(PdWlflowout2[i][j]/dt.beta)^1.852*(L_2[i][j]/Waterdict["edgediameter"]) for j in 1:length(H2_2[i])) +
-#             sum((dt.Z*dt.R*dt.T/((dt.K - 1)*dt.K)*((Pr2_1[i][j]/Pr1_1[i][j])^((dt.K-1)/dt.K) - 1))*PdGlflowout1[i][j]/(33000*dt.elta) for j in 1:length(Pr2_1[i])) +
-#             sum((dt.Z*dt.R*dt.T/((dt.K - 1)*dt.K)*((Pr2_2[i][j]/Pr1_2[i][j])^((dt.K-1)/dt.K) - 1))*PdGlflowout2[i][j]/(33000*dt.elta) for j in 1:length(Pr2_2[i])) +
-#             Powerdict["population_assignment"][i] == Pload[Powerdict["demandseries"][i]])
+@NLconstraint(mp, Pdwglink[i = 1:pdemandnum], sum(dt.wdensity*dt.g*PdWlflowout1[i][j]*(H2_1[i][j] - H1_1[i][j]) for j in 1:length(H2_1[i])) +
+            sum(10.654*(PdWlflowout1[i][j]/dt.beta)^1.852*(L_1[i][j]/Waterdict["edgediameter"]) for j in 1:length(H2_1[i])) +
+            sum(dt.wdensity*dt.g*PdWlflowout2[i][j]*(H2_2[i][j] - H1_2[i][j]) for j in 1:length(H2_2[i])) +
+            sum(10.654*(PdWlflowout2[i][j]/dt.beta)^1.852*(L_2[i][j]/Waterdict["edgediameter"]) for j in 1:length(H2_2[i])) +
+            sum((dt.Z*dt.R*dt.T/((dt.K - 1)*dt.K)*((Pr2_1[i][j]/Pr1_1[i][j])^((dt.K-1)/dt.K) - 1))*PdGlflowout1[i][j]/(33000*dt.elta) for j in 1:length(Pr2_1[i])) +
+            sum((dt.Z*dt.R*dt.T/((dt.K - 1)*dt.K)*((Pr2_2[i][j]/Pr1_2[i][j])^((dt.K-1)/dt.K) - 1))*PdGlflowout2[i][j]/(33000*dt.elta) for j in 1:length(Pr2_2[i])) +
+            Powerdict["population_assignment"][i] == Pload[Powerdict["demandseries"][i]])
 
 #pressure and flow constraint in gas networks
-# @NLconstraint(mp, Glinkprflow[i = 1:length(Gflow)], Gflow[i]^(1/dt.delta5) == (dt.delta1*dt.e*(Gasdict["edgediameter"])^dt.delta2*(dt.Ts/dt.Prs)^dt.delta3)^(1/dt.delta5)*(Gpr[Glist2adj[i, 1]]^2 - Gpr[Glist2adj[i, 2]]^2)/(dt.xi^dt.delta4*Gasdistnode2node[Glist2adj[i, 1], Glist2adj[i, 2]]*dt.T*dt.phi))
-@NLconstraint(mp, Glinkprflow[i = 1:length(Gflow)], Gflow[i] == Gpr[Glist2adj[i, 1]]^2 - Gpr[Glist2adj[i, 2]]^2)
+@NLconstraint(mp, Glinkprflow[i = 1:length(Gflow)], Gflow[i]^(1/dt.delta5) == (dt.delta1*dt.e*(Gasdict["edgediameter"])^dt.delta2*(dt.Ts/dt.Prs)^dt.delta3)^(1/dt.delta5)*(Gpr[Glist2adj[i, 1]]^2 - Gpr[Glist2adj[i, 2]]^2)/(dt.xi^dt.delta4*Gasdistnode2node[Glist2adj[i, 1], Glist2adj[i, 2]]*dt.T*dt.phi))
+
 #pressure and flow constraint in interdependent gas-power networks
-# @NLconstraint(mp, G2Plinkprflow[i = 1:length(GPflow)], GPflow[i]^(1/dt.delta5) == (dt.delta1*dt.e*(Gasdict["edgediameter"])^dt.delta2*(dt.Ts/dt.Prs)^dt.delta3)^(1/dt.delta5)*(Gpr[Gasdict["demandseries"][GPlist2adj[i, 1]]]^2 - Ppr[Powerdict["supplyseries"][GPlist2adj[i, 2]]]^2)/(dt.xi^dt.delta4*gdemand2psupplydistnode2node[GPlist2adj[i, 1], GPlist2adj[i, 2]]*dt.T*dt.phi))
-@NLconstraint(mp, G2Plinkprflow[i = 1:length(GPflow)], GPflow[i] == Gpr[Gasdict["demandseries"][GPlist2adj[i, 1]]]^2 - Ppr[Powerdict["supplyseries"][GPlist2adj[i, 2]]]^2)
+@NLconstraint(mp, G2Plinkprflow[i = 1:length(GPflow)], GPflow[i]^(1/dt.delta5) == (dt.delta1*dt.e*(Gasdict["edgediameter"])^dt.delta2*(dt.Ts/dt.Prs)^dt.delta3)^(1/dt.delta5)*(Gpr[Gasdict["demandseries"][GPlist2adj[i, 1]]]^2 - Ppr[Powerdict["supplyseries"][GPlist2adj[i, 2]]]^2)/(dt.xi^dt.delta4*gdemand2psupplydistnode2node[GPlist2adj[i, 1], GPlist2adj[i, 2]]*dt.T*dt.phi))
+
 
 
 @objective(mp, Min, sum(Wflow[i]*Waterdistnode2node[Wlist2adj[i, 1], Wlist2adj[i, 2]] for i in 1:length(Wflow))*dt.cw +
