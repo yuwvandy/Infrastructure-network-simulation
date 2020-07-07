@@ -15,7 +15,7 @@ water1para = {"name": "Water",
               "trannum": 6,
               "demandnum": 34,
               "color": "blue",
-              "edgediameter": 5
+              "edgediameter": 0.6
               }
 
 ##Data for power network
@@ -41,7 +41,7 @@ gas1para = {"name": "Gas",
               "trannum": 7,
               "demandnum": 6,
               "color": "green",
-              "edgediameter": 5
+              "edgediameter": 0.7
               }
               
 
@@ -65,6 +65,7 @@ num = 1
 
 ##-----------------------------------data for generating networks using method in ouyangmin paper
 m = 3 #how many nodes nearest are connected to the node
+cnum = 2
 Type2 = 'Population'
 
 water2para = {"name": "Water2",

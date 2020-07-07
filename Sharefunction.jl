@@ -96,7 +96,7 @@ module sf
                 push!(flowinnode, 0)
             end
             if(length(flowoutnode) == 0)
-                push!(flowinnode, 0)
+                push!(flowoutnode, 0)
             end
 
             push!(flowin, flowinnode)
@@ -133,7 +133,7 @@ module sf
                 push!(flowinnode, 0)
             end
             if(length(flowoutnode) == 0)
-                push!(flowinnode, 0)
+                push!(flowoutnode, 0)
             end
 
             push!(flowin, flowinnode)

@@ -20,6 +20,9 @@ def FeatureScaling(A):
 def FeatureScaling2(A, min_val, sigma_val):
     return ((A - min_val)/sigma_val)
 
+def FeatureScaling3(A):
+    return A/np.sum(A)
+
 def dist(node1y, node1x, node2y, node2x):
     return ((node1y - node2y)**2+(node1x - node2x)**2)**0.5/1000 #m -> km
 

@@ -37,7 +37,7 @@ class network:
         self.Geoy = Geoy
     
         
-    def Nodelocation(self, Tract_pop, Tractx, Tracty, longitude, latitude):
+    def Nodelocation(self, Tract_pop, Tractx, Tracty, longitude, latitude, cnum):
         """Annealing simulation to decide the node location
         """
         import annealsimulation
@@ -68,20 +68,20 @@ class network:
         Tractx1 = sf.FeatureScaling(Tractx)
         Tracty1 = sf.FeatureScaling(Tracty)
         
-        self.demandloc, self.demandc, self.popuassign = ans.anneal2(self.demandloc, 'Population', Geox1, Geoy1, Tract_pop1, Tractx1, Tracty1, Tract_pop)
+        self.demandloc, self.demandc, self.popuassign = ans.anneal2(self.demandloc, 'Population', Geox1, Geoy1, Tract_pop1, Tractx1, Tracty1, Tract_pop, cnum)
         self.demandy1 = Geoy1[self.demandloc[:, 0]]
         self.demandx1 = Geox1[self.demandloc[:, 1]]
         self.demandy = self.Geoy[self.demandloc[:, 0]]
         self.demandx = self.Geox[self.demandloc[:, 1]]
         #Transmission node
-        self.tranloc, self.tranc, temp = ans.anneal2(self.tranloc, 'Facility', Geox1, Geoy1, Tract_pop1, self.demandx1, self.demandy1, Tract_pop)
+        self.tranloc, self.tranc, temp = ans.anneal2(self.tranloc, 'Facility', Geox1, Geoy1, Tract_pop1, self.demandx1, self.demandy1, Tract_pop, cnum)
         self.trany1 = Geoy1[self.tranloc[:, 0]]
         self.tranx1 = Geox1[self.tranloc[:, 1]]
         self.trany = self.Geoy[self.tranloc[:, 0]]
         self.tranx = self.Geox[self.tranloc[:, 1]]
 
         #Supply node
-        self.supplyloc, self.supplyc, temp = ans.anneal2(self.supplyloc, 'Facility', Geox1, Geoy1, Tract_pop1, self.tranx1, self.trany1, Tract_pop)
+        self.supplyloc, self.supplyc, temp = ans.anneal2(self.supplyloc, 'Facility', Geox1, Geoy1, Tract_pop1, self.tranx1, self.trany1, Tract_pop, cnum)
         self.supplyy1 = Geoy1[self.supplyloc[:, 0]]
         self.supplyx1 = Geox1[self.supplyloc[:, 1]]    
         self.supplyy = self.Geoy[self.supplyloc[:, 0]]
@@ -463,7 +463,7 @@ class network:
                 Temp += self.degree[j]*self.Adjmatrix[i, j]
             self.Ndegree[i] = Temp
             
-    def cost_cal(self, Type, Tract_pop, Tractx, Tracty):
+    def cost_cal(self, Type, Tract_pop, Tractx, Tracty, cnum):
         """Calculate the normalized demand-population cost
         """
         Geox1 = sf.FeatureScaling(self.Geox)
@@ -472,7 +472,7 @@ class network:
         Tractx1 = sf.FeatureScaling(Tractx)
         Tracty1 = sf.FeatureScaling(Tracty)
         
-        self.cost, temp = ans.cost(self.demandloc, Geox1, Geoy1, Tract_pop1, Type, Tractx1, Tracty1, Tract_pop)
+        self.cost, temp = ans.cost(self.demandloc, Geox1, Geoy1, Tract_pop1, Type, Tractx1, Tracty1, Tract_pop, cnum)
         
     def cal_topology_feature(self):
         """Calculate the topology features of the network
@@ -490,7 +490,7 @@ class network:
         self.topo_diameter()
         self.spatial_diameter()
         
-    def network_setup(self, Tract_density, Tractx, Tracty, i, lon, lat):
+    def network_setup(self, Tract_density, Tractx, Tracty, i, lon, lat, cnum):
         """Initialize everything for networks: location, distance matrix, degreesequence, cost, cluster_coeff, efficiency, diameter
         Input: Tract_density - 1D numpy array: population data of each tract in the area
                Tractx - 1D numpy array
@@ -499,7 +499,7 @@ class network:
         
         Output: \
         """
-        self.Nodelocation(Tract_density, Tractx, Tracty, lon, lat)
+        self.Nodelocation(Tract_density, Tractx, Tracty, lon, lat, cnum)
         ##from GOOGLE API get the elevation
         self.GoogleAPIele()
         self.Distmatrix()
@@ -522,7 +522,7 @@ class network:
         
         ##Calculate the network topology features
         self.cal_topology_feature()
-        self.cost_cal(dt.Type2, Tract_density, Tractx, Tracty)
+        self.cost_cal(dt.Type2, Tract_density, Tractx, Tracty, cnum)
 #       self.cost_cal(dt.Type2, Tract_pop, Tractx, Tracty)
         
     def datacollection(self):

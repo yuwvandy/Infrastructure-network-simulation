@@ -64,7 +64,10 @@ def BaseMapSet(Type, llon, rlon, llat, rlat):
         Base = Basemap(projection = 'merc', resolution = 'l', area_thresh = 1000.0, lat_0=0, lon_0=0, llcrnrlon=llon, llcrnrlat=llat, urcrnrlon=rlon, urcrnrlat=rlat)
     elif(Type == 'whole'):
         Base = Basemap(resolution = 'l', area_thresh = 1000.0, lat_0=0, lon_0=0, llcrnrlon=llon, llcrnrlat=llat, urcrnrlon=rlon, urcrnrlat=rlat)
-    Base.drawcoastlines()
+    try:
+        Base.drawcoastlines(linewidth=0.5)
+    except:
+        pass
     Base.drawcountries()
     Base.drawmapboundary()
     parallels = np.arange(-90, 90, 0.07)

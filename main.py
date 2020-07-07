@@ -50,7 +50,7 @@ networklist = [Water, Power, Gas]
 #Calculate the node locations and topology features
 for i in range(len(networklist)):
     Network = networklist[i]
-    Network.network_setup(Tract_pop, Tractx, Tracty, i, lon, lat)
+    Network.network_setup(Tract_pop, Tractx, Tracty, i, lon, lat, dt.cnum)
 
 #Initialilze the dependency of power supply nodes on gas demand nodes for generating electricity
 gdemand2psupply = phynode2node(Gas, Power, dt.para_gdemand2psupply)
