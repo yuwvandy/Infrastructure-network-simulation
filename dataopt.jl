@@ -1,8 +1,8 @@
 module dt
 #For equation (8): gas combustion -> electricity
 au, bu, cu = 1, 1, 1 #temporarily assumed
-H = 50000000 #MJ/kg
-kapa = 0.47*0.00378541 #convertion ratio for water cooling effect using power
+H = 35396 #kJ/m^3
+kapa = 1.8/1000 #convertion ratio for water cooling effect using power: how much water (m^3) do we need generate electricity per kWh
 
 #For equation (9)-(10): electricity -> pressure increase of compressor
 K = 1.38 #isentropic exponent

@@ -71,7 +71,7 @@ while(Temp <= 50):
     for i in range(len(Network_obj)):
         #Decision of facility location of three networks
         Network = Network_obj[i]
-        Network.network_setup(Tract_density, Tractx, Tracty, i, dt.cnum)
+        Network.network_setup(Tract_density, Tractx, Tracty, i, lon, lat, dt.cnum)
         
         topo_eff1[i].append(Network.topo_efficiency)
         eff1[i].append(Network.efficiency)
