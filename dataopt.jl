@@ -28,9 +28,9 @@ Prs = 14.73 #Pressure at standard condition: psia
 #For objective (equation (29))
 cw, cg, cp = 1, 1, 1 #the cost of transport single unit of flow per unit distance
 
-powerperunit = 0.0001427 #KW*h/s
+powerperunit = 0.0001763117283950617 #KW*h/s
 gasperunit = 0.000648*0.02831 #m^3/s
-waterperunit = 0.1157*0.00378541 #m^3/s
+waterperunit = 3.942e-6 #m^3/s
 
 waterdiameter = 0.6 #m
 gasdiameter = 0.7 #m

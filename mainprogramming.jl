@@ -34,9 +34,9 @@ mp = Model(optimizer_with_attributes(optimizer, "nl_solver"=>nl_solver, "mip_sol
 
 #------------------------------------------------Define the programming variables
 #network
-@variable(mp,  Gflow[1:size(Glist2adj)[1]] >= 0)
-@variable(mp, Pload[1:pnum] >= 0)
-@variable(mp, Wflow[1:size(Wlist2adj)[1]] >= 0.00001)
+@variable(mp,  Gflow[1:size(Glist2adj)[1]] >= 0) #m^3/s
+@variable(mp, 0 <= Pload[1:pnum] <= 100) #kw.h/s
+@variable(mp, Wflow[1:size(Wlist2adj)[1]] >= 0.00001) #m^3/s
 @variable(mp, Gpr[1:gnum] >= 0.00001)
 @variable(mp, Ppr[1:psupplynum] >= 0.00001)
 #between network
@@ -113,13 +113,13 @@ PdGlflowout2, Pr1_2, Pr2_2 = sf.pdemandgpinterlinkflowout(pdemand2gpinterlinkadj
             dt.powerperunit*Powerdict["population_assignment"][i] == Pload[Powerdict["demandseries"][i]])
 
 # pressure and flow constraint in gas networks
-@NLconstraint(mp, Glinkprflow[i = 1:length(Gflow)], Gflow[i]^(1/dt.delta5) == 0.0031402216114034425*(Gpr[Glist2adj[i, 1]]^2 - Gpr[Glist2adj[i, 2]]^2)/(Gasdistnode2node[Glist2adj[i, 1], Glist2adj[i, 2]]))
-# @NLconstraint(mp, Glinkprflow[i = 1:length(Gflow)], Gflow[i]^(1/dt.delta5) == (dt.delta1*dt.e*(Gasdict["edgediameter"])^dt.delta2*(dt.Ts/dt.Prs)^dt.delta3)^(1/dt.delta5)*(Gpr[Glist2adj[i, 1]]^2 - Gpr[Glist2adj[i, 2]]^2)/(dt.xi^dt.delta4*Gasdistnode2node[Glist2adj[i, 1], Glist2adj[i, 2]]*dt.T*dt.phi))
+# @NLconstraint(mp, Glinkprflow[i = 1:length(Gflow)], Gflow[i]^(1/dt.delta5) == 0.000011402216114034425*(Gpr[Glist2adj[i, 1]]^2 - Gpr[Glist2adj[i, 2]]^2)/(Gasdistnode2node[Glist2adj[i, 1], Glist2adj[i, 2]]))
+@NLconstraint(mp, Glinkprflow[i = 1:length(Gflow)], (Gflow[i]*127133)^(1/dt.delta5) == (dt.delta1*dt.e*(Gasdict["edgediameter"]*39.3701)^dt.delta2*(dt.Ts/dt.Prs)^dt.delta3)^(1/dt.delta5)*((Gpr[Glist2adj[i, 1]]/100)^2 - (Gpr[Glist2adj[i, 2]]/100)^2)/(dt.xi^dt.delta4*Gasdistnode2node[Glist2adj[i, 1], Glist2adj[i, 2]]*0.621371*(dt.T*9/5 + 491.67)*dt.phi))
 
 
 # # # # #pressure and flow constraint in interdependent gas-power networks
-@NLconstraint(mp, G2Plinkprflow[i = 1:length(GPflow)], GPflow[i]^(1/dt.delta5) <= 0.0031402216114034425*(Gpr[Gasdict["demandseries"][GPlist2adj[i, 1]]]^2 - Ppr[Powerdict["supplyseries"][GPlist2adj[i, 2]]]^2)/(gdemand2psupplydistnode2node[GPlist2adj[i, 1], GPlist2adj[i, 2]]))
-# @NLconstraint(mp, G2Plinkprflow[i = 1:length(GPflow)], GPflow[i]^(1/dt.delta5) == (dt.delta1*dt.e*(Gasdict["edgediameter"])^dt.delta2*(dt.Ts/dt.Prs)^dt.delta3)^(1/dt.delta5)*(Gpr[Gasdict["demandseries"][GPlist2adj[i, 1]]]^2 - Ppr[Powerdict["supplyseries"][GPlist2adj[i, 2]]]^2)/(dt.xi^dt.delta4*gdemand2psupplydistnode2node[GPlist2adj[i, 1], GPlist2adj[i, 2]]*dt.T*dt.phi))
+# @NLconstraint(mp, G2Plinkprflow[i = 1:length(GPflow)], GPflow[i]^(1/dt.delta5) <= 0.000011402216114034425*(Gpr[Gasdict["demandseries"][GPlist2adj[i, 1]]]^2 - Ppr[Powerdict["supplyseries"][GPlist2adj[i, 2]]]^2)/(gdemand2psupplydistnode2node[GPlist2adj[i, 1], GPlist2adj[i, 2]]))
+@NLconstraint(mp, G2Plinkprflow[i = 1:length(GPflow)], (GPflow[i]*127133)^(1/dt.delta5) <= (dt.delta1*dt.e*(Gasdict["edgediameter"]*39.3701)^dt.delta2*(dt.Ts/dt.Prs)^dt.delta3)^(1/dt.delta5)*((Gpr[Gasdict["demandseries"][GPlist2adj[i, 1]]]/100)^2 - (Ppr[Powerdict["supplyseries"][GPlist2adj[i, 2]]]/100)^2)/(dt.xi^dt.delta4*gdemand2psupplydistnode2node[GPlist2adj[i, 1], GPlist2adj[i, 2]]*0.621371*(dt.T*9/5 + 491.67)*dt.phi))
 
 @objective(mp, Min, sum(Wflow[i]*Waterdistnode2node[Wlist2adj[i, 1], Wlist2adj[i, 2]] for i in 1:length(Wflow))*dt.cw +
                     sum(Gflow[i]*Gasdistnode2node[Glist2adj[i, 1], Glist2adj[i, 2]] for i in 1:length(Gflow))*dt.cg +

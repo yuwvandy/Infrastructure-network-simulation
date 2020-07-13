@@ -78,7 +78,7 @@ def Adjmatrix(Network, edge, Type):
         if(Type[edge[i, 0]] == Type[edge[i, 1]]):
             Network.Adjmatrix[edge[i, 1], edge[i, 0]] = 1
         
-def cost(Network, Tract_pop, Tractx, Tracty, Geox, Geoy):
+def cost(Network, Tract_pop, Tractx, Tracty, Geox, Geoy, cnum):
     """Calculate the overall cost all a new solution: two type: demand-population, supply-transmission(transmission-demand)
     """
     x = sf.FeatureScaling2(Network.demandx, np.min(Geox), np.max(Geox) - np.min(Geox))
@@ -88,17 +88,22 @@ def cost(Network, Tract_pop, Tractx, Tracty, Geox, Geoy):
     Tracty1 = sf.FeatureScaling(Tracty)
         
     Sum_Cost = 0
-    for i in range(len(Tractx)):
-        Min_Dist = math.inf
+    Popu_assign2 = np.zeros(len(x))
+    
+    for i in range(len(Tractx1)):
+        Dist = np.empty(len(x), dtype = float)
         for k in range(len(x)):
-            Dist = math.sqrt((Tracty1[i] - y[k])**2 + (Tractx1[i] - x[k])**2)
-            if(Dist < Min_Dist):
-                Min_Dist = Dist
-#                index = k
-        Sum_Cost += Min_Dist*Tract_pop1[i]
+            Dist[k] = math.sqrt((Tracty1[i] - y[k])**2 + (Tractx1[i] - x[k])**2)
+        
+        index = sf.minimumk(Dist, min(cnum, len(x)))
+        ratio = sf.FeatureScaling3(np.sum(np.exp(Dist[index]))/np.exp(Dist[index]))
+        
+        for k in range(len(index)):
+            Popu_assign2[index[k]] += Tract_pop1[i]*ratio[k]
+            Sum_Cost += Popu_assign2[index[k]]*Dist[index[k]]
                 
     Network.cost = Sum_Cost
-
+    
 
 WN, WE = read(dt.WNpath, dt.WEpath)
 PN, PE = read(dt.PNpath, dt.PEpath)
@@ -141,7 +146,7 @@ for i in range(len(ShelbyNetwork)):
     Network.drawnetwork(dt.Type1, dt.llon, dt.rlon, dt.llat, dt.rlat)
     Network.cal_topology_feature()
 #    cost(Network, Tract_pop, Tractx, Tracty, Geox, Geoy)
-    cost(Network, Tract_density, Tractx, Tracty, Geox, Geoy)
+    cost(Network, Tract_pop, Tractx, Tracty, Geox, Geoy, dt.cnum)
 
 #
 ##------------------------------------------------------------------------------
