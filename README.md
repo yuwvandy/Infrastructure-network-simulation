@@ -1,8 +1,8 @@
 # Interdependent Infrastructure Network Simulation Tool
 A comprehensive framework to simulate interdependent infrastructure networks as well as their physical flow, which can be used as test cases for vulnerability assessment and restoration optimization of interdependent infrastructure networks.
 
-![gas-water-power](images/simulatedsystem.png)
-![simulated system](https://user-images.githubusercontent.com/53798810/91645207-cbea7680-ea08-11ea-8372-d41462ad7bf6.png)
+![gaswaterpower](images/gaswaterpower.png)
+![simulatedsystem](images/simulatedsystem.png)
 
 
 ## 1. Motivation
