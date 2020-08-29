@@ -2,7 +2,8 @@
 A comprehensive framework to simulate interdependent infrastructure networks as well as their physical flow, which can be used as test cases for vulnerability assessment and restoration optimization of interdependent infrastructure networks.
 
 ![gas-water-power](https://user-images.githubusercontent.com/53798810/91645081-c2144380-ea07-11ea-869d-4273ff331e4b.png)
-![simulated system](https://user-images.githubusercontent.com/53798810/91645183-96458d80-ea08-11ea-8e86-b2941159c235.png)
+![simulated system](https://user-images.githubusercontent.com/53798810/91645207-cbea7680-ea08-11ea-8372-d41462ad7bf6.png)
+
 
 ## 1. Motivation
 Interdependent infrastructure networks provide essential services to modern societies and their disruptions could lead to the catastrophic outcomes, which necessitates the evaluation of their system-level performance. Typically, the system-level performance is assessed by taking real networks as testbeds, simulating failure scenarios and measuring their performance decay along the time. 
