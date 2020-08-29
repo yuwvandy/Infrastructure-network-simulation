@@ -1,6 +1,8 @@
-# Simulation tool of interdependent gas-power-water systems
+# Interdependent Infrastructure Network Simulation Tool
+A comprehensive framework to simulate interdependent infrastructure networks as well as their physical flow, which can be used as test cases for vulnerability assessment and restoration optimization of interdependent infrastructure networks.
+
 ## 1. Motivation
-A methodological framework which can simulate infrastructure networks and their interdependencies, initialize the flow inter and intro networks is proposed, which can used in statistically analyzing infrastructure topologies and performing vulnerability, resilience analysis.
+Interdependent infrastructure networks provide essential services to modern societies and their disruptions could lead to the catastrophic outcomes, which necessitates the evaluation of their system-level performance. Typically, the system-level performance is assessed by taking real networks as testbeds, simulating failure scenarios and measuring their performance decay along the time. 
 ## 2. Input data
 (1) The area where the infrastructure systems are to be set up: geographical boundary (lat, lon), the population distribution (in tract sense), the real infrastructure system to be simulated (degree distribution, the number of different type of facilities)
 ## Output data
