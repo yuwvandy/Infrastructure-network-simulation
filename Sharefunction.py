@@ -170,21 +170,87 @@ def list2dataframe(List, value, key1, key2):
     
     return mylist
 
-def savenetworkfeature(network):
+def savenetworkfeature(network, Temp):
     """Summarize the network features and pack them into a dictionary, save the dictionary file using CSV in p2jdata folder
     Input: network - object, containing all information of the network
+           Temp - the current index of the network information in the folder
     Output: None, but the CSV file is in the .\p2jdata folder
     """
     import csv
     
     #save the dictionary into CSV file
-    with open('./p2jdata/networkinfo/{}data.csv'.format(network.datadict['name']), 'w', newline = '\n') as f:
+    with open('./p2jdata/networkinfo/{}/{}data.csv'.format(Temp, network.datadict['name']), 'w', newline = '\n') as f:
         writer = csv.writer(f)
         for key, value in network.datadict.items():
             if(isinstance(value, np.ndarray)): #Transform numpy.array to list so that there is no linebreak in the exported CSV file, and the data imported by reading the CSV file will not have "\n"
                 writer.writerow([key, list(value)])
             else:
                 writer.writerow([key, value])
+                
+                
+                
+def mst(distmatrix):
+    """Find the minimum spanning tree of the given graph
+    """
+    result, edgelist = [], []
+    nodenum = len(distmatrix)
+    
+    for i in range(nodenum):
+        for j in range(i + 1, nodenum):
+            edgelist.append([i, j, distmatrix[i, j]])
+    
+    i, e = 0, 0
+    edgelist = sorted(edgelist, key = lambda item: item[2])
+    parent, rank = [], []
+    
+    for node in range(nodenum):
+        parent.append(node)
+        rank.append(0)
+    
+    while e < nodenum - 1:
+        u, v, w = edgelist[i]
+        i = i + 1
+        x = mstfind(parent, u)
+        y = mstfind(parent, v)
+        
+        if(x != y):
+            e = e + 1
+            result.append([u, v, w])
+            mstunion(parent, rank, x, y)
+    
+    return result
+            
+def mstfind(parent, i):
+    if(parent[i] == i):
+        return i
+    return mstfind(parent, parent[i])
+
+def mstunion(parent, rank, x, y):
+    xroot = mstfind(parent, x)
+    yroot = mstfind(parent, y)
+    
+    if(rank[xroot] < rank[yroot]):
+        parent[xroot] = yroot
+    elif(rank[xroot] > rank[yroot]):
+        parent[yroot] = xroot
+    
+    else:
+        parent[yroot] = xroot
+        rank[xroot] += 1
+        
+def Func():
+    a = np.random.randint(1, 10000)
+    b = np.random.randint(1, 10000)
+    c = np.random.randint(1, 10000)
+    d = np.random.randint(1, 10000)
+    
+    temp1 = ((a+b)/(c+d))**0.2
+    temp2 = (a/c)**0.2 + (b/d)**0.2
+    
+    if(temp1 > temp2):
+        print(1)
+            
+    
     
 
 

@@ -5,8 +5,9 @@ The data is used for defining the programming variables in julia
 using CSV
 using Formatting
 #Read the csv file in the current folder and import data
-#adjacent and distance matrix
-path = string(pwd(), "/p2jdata/adjdist")
+#adjacent and distance matri0
+Temp = 106
+path = string(pwd(), "/p2jdata/adjdist/", "$Temp")
 filelist = readdir(path)
 filepath = Array{String}(undef, length(filelist))
 
@@ -17,7 +18,7 @@ for i in 1:length(filelist)
 end
 
 #network information
-path = string(pwd(), "/p2jdata/networkinfo")
+path = string(pwd(), "/p2jdata/networkinfo/", "$Temp")
 filelist = readdir(path)
 filepath = Array{String}(undef, length(filelist))
 

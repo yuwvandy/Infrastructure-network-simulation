@@ -174,7 +174,7 @@ class network:
         
         for i in range(self.trannum):
             if(np.sum(self.Adjmatrix[self.supplyseries, self.transeries[i]]) == 0):
-                minindex = np.array(sf.minimumk(self.Dismatrix[self.supplyseries, self.transeries[i]], 1))
+                minindex = np.array(sf.minimumk(self.Dismatrix[self.supplyseries, self.transeries[i]], num))
                 self.Adjmatrix[minindex, self.transeries[i]] = 1
 #                self.Adjmatrix[self.transeries[i], minindex] = 1
                 

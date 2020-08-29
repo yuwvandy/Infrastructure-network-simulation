@@ -10,8 +10,8 @@ module sf
         list2adj = Array{Int64}(undef, Int64(sum(adjmatrix)), 2)
 
         temp = 0
-        for i in range(1, rownum)
-            for j in range(1, columnnum)
+        for i in 1:rownum
+            for j in 1:columnnum
                 if(adjmatrix[i, j] == 1)
                     temp += 1
 
@@ -326,4 +326,9 @@ module sf
         end
         return array
     end
+
+    # function importcsv(array)
+    #     #=save the optimization result to CSV
+    #     =#
+    #     x =
 end
