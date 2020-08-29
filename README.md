@@ -1,5 +1,6 @@
 # Interdependent Infrastructure Network Simulation Tool
 A comprehensive framework to simulate interdependent infrastructure networks as well as their physical flow, which can be used as test cases for vulnerability assessment and restoration optimization of interdependent infrastructure networks.
+![simulated system](images/simulated system.png)
 
 ## 1. Motivation
 Interdependent infrastructure networks provide essential services to modern societies and their disruptions could lead to the catastrophic outcomes, which necessitates the evaluation of their system-level performance. Typically, the system-level performance is assessed by taking real networks as testbeds, simulating failure scenarios and measuring their performance decay along the time. 
