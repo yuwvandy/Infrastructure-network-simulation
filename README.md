@@ -2,7 +2,7 @@
 A comprehensive framework to simulate interdependent infrastructure networks as well as their physical flow, which can be used as test cases for vulnerability assessment and restoration optimization of interdependent infrastructure networks.
 
 ![gaswaterpower](images/gaswaterpower.png)
-![simulatedsystem](images/simulatedsystem.png)
+![simulatedsystem](images/simulatedsystemupdate.png)
 
 
 ## 1. Motivation
