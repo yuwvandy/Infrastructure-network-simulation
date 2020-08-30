@@ -5,8 +5,8 @@ A comprehensive framework to simulate interdependent infrastructure networks as 
 > A typical interdependent gas-power-water networks
 
 ## Contents
-- __[Motivation](#Motivations)__
-- __[Framework](#framework)__
+- __[Motivation](#Motivation)__
+- __[Framework](#Framework)__
   - [Input and Output Intrepretation](#Input and Output Intrepretation)
   - [Output Intrepretation](#Output Interpretation)
 - __[Tutorial](#Tutorial)__
@@ -14,11 +14,11 @@ A comprehensive framework to simulate interdependent infrastructure networks as 
 
 ## 1. Motivation
 Interdependent infrastructure networks provide essential services to modern societies. Their disruptions subjected to natural disasters could lead to catastrophic outcomes, which necessitates the evaluation of the system-level performance in advance. Typically, the system-level performance is estimated by taking real networks as testbeds, simulating failure scenarios and measuring their performance decay along the time. However, complete information on the topology and flow of individual networks and their interdependencies are very often not publicly available due to privacy and security concerns. Therefore, this work provides a comprehensive framework to simulate interdependent infrastructure networks as testbeds for future use. The simulation tool can be easily appled to generate individual infrastructure networks, as well as their interdependencies.
-## 2. Input data
+## 2. Framework
 (1) The area where the infrastructure systems are to be set up: geographical boundary (lat, lon), the population distribution (in tract sense), the real infrastructure system to be simulated (degree distribution, the number of different type of facilities)
-## Output data
+## 3. Tutorial
 (1) The interdependent system to be simulated: the topology and the flow
-## 3. Contents
+## 4. Case Study
 **** 
 ### Network topology simulation and analysis are performed in Python
 * Basemapset.py: Set up the base backgroud where the infrastructure system is to be set; import the population data here
