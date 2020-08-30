@@ -58,7 +58,7 @@ llat, rlat = 34.98, 35.4
 d_lat, d_lon = 0.01, 0.01
 Type1 = 'local'
 
-Tractfile = r'.\data\Tract.xlsx'
+Tractfile = r'.\data\Tract.xlsx' #the file is from https://www.usboundary.com/Areas/Census%20Tract/Tennessee/Shelby%20County
 
 ##-----------------------------------parameter for connecting networks
 num = 1
