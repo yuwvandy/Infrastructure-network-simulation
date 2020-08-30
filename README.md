@@ -7,16 +7,16 @@ A comprehensive framework to simulate interdependent infrastructure networks as 
 ## Contents
 - __[Motivation](#Motivation)__
 - __[Framework](#Framework)__
-  - [Data Preparation](#data)
-  - [Algorithm Flowchart](#flowchart)
+  - [Data Preparation](#Data)
+  - [Algorithm Flowchart](#Flowchart)
 - __[Tutorial](#Tutorial)__
-- __[Case Study](#Example)__
+- __[Example](#Example)__
 
 ## Motivation
 Interdependent infrastructure networks provide essential services to modern societies. Their disruptions subjected to natural disasters could lead to catastrophic outcomes, which necessitates the evaluation of the system-level performance in advance. Typically, the system-level performance is estimated by taking real networks as testbeds, simulating failure scenarios and measuring their performance decay along the time. However, complete information on the topology and flow of individual networks and their interdependencies are very often not publicly available due to privacy and security concerns. Therefore, this work provides a comprehensive framework to simulate interdependent infrastructure networks as testbeds for future use. The simulation tool can be easily appled to generate individual infrastructure networks, as well as their interdependencies.
 ## Framework
 Procedures of simulating interdependent infrastructure networks consist of simulating individual networks, setting up interdependent links and initializing the system flow. The first two parts are executed in PYTHON while the flow optimization is approached by IPOPT solve embeded in JULIA.
-### Data Preparation
+### Data
 (1) **(lon1, lon2, lat1, lat2)**: the geoboundary of the specific territory where the simulated networks are to be embeded.<br>
 (2) **Tract_data**: (lat, lon, population, area) of tracts in the geoboundary (lon1, lon2, lat1, lat2), which can be assessed from [USboundary](https://www.usboundary.com/Areas/Census%20Tract/Tennessee/Shelby%20County).<br>
 (3) **d_lon, d_lat**: the size of the grid after segmentation.<br>
@@ -31,16 +31,21 @@ Procedures of simulating interdependent infrastructure networks consist of simul
 - *"name"*: the name of the interdependency
 - *"network1"*: the network that provide resources to the other network in the interdependency. This is the **network** object initialized beforehand.
 - *"network2"*: the network depending on resources from the other network in the interdependency. This is the **network** object initialized beforehand.
-- *"dependnum"*: the number of facilities in the network that are relied on by each of the facilities in the other network in the interdependency.
-### Flowchart
+- *"dependnum"*: the number of facilities in the network that are relied on by each of the facilities in the other network in the interdependency.<br>
 
+(8) **flow_data**: parameter used for optimization on network flow, which are collected from multiple sources specified in the paper.
+### Flowchart
+<p align="center">
+  <img width="500" height="550" src="images/algorithmflowchart.png">
+</p>
+> The flowchart of the algorithm to generate interdependent infrastructure networks
 
 ## Tutorial
-## Case Study
+## Example
 (1) The area where the infrastructure systems are to be set up: geographical boundary (lat, lon), the population distribution (in tract sense), the real infrastructure system to be simulated (degree distribution, the number of different type of facilities)
 ## 3. Tutorial
 (1) The interdependent system to be simulated: the topology and the flow
-## 4. Case Study
+## 4. Example
 **** 
 ### Network topology simulation and analysis are performed in Python
 * Basemapset.py: Set up the base backgroud where the infrastructure system is to be set; import the population data here
