@@ -7,14 +7,36 @@ A comprehensive framework to simulate interdependent infrastructure networks as 
 ## Contents
 - __[Motivation](#Motivation)__
 - __[Framework](#Framework)__
-  - [Input and Output Intrepretation](#Input and Output Intrepretation)
-  - [Output Intrepretation](#Output Interpretation)
+  - [Data Preparation](#data)
+  - [Algorithm Flowchart](#flowchart)
 - __[Tutorial](#Tutorial)__
 - __[Case Study](#Example)__
 
 ## Motivation
 Interdependent infrastructure networks provide essential services to modern societies. Their disruptions subjected to natural disasters could lead to catastrophic outcomes, which necessitates the evaluation of the system-level performance in advance. Typically, the system-level performance is estimated by taking real networks as testbeds, simulating failure scenarios and measuring their performance decay along the time. However, complete information on the topology and flow of individual networks and their interdependencies are very often not publicly available due to privacy and security concerns. Therefore, this work provides a comprehensive framework to simulate interdependent infrastructure networks as testbeds for future use. The simulation tool can be easily appled to generate individual infrastructure networks, as well as their interdependencies.
-## 2. Framework
+## Framework
+Procedures of simulating interdependent infrastructure networks consist of simulating individual networks, setting up interdependent links and initializing the system flow. The first two parts are executed in PYTHON while the flow optimization is approached by IPOPT solve embeded in JULIA.
+### Data Preparation
+(1) **(lon1, lon2, lat1, lat2)**: the geoboundary of the specific territory where the simulated networks are to be embeded.<br>
+(2) **Tract_data**: (lat, lon, population, area) of tracts in the geoboundary (lon1, lon2, lat1, lat2), which can be assessed from [USboundary](https://www.usboundary.com/Areas/Census%20Tract/Tennessee/Shelby%20County).<br>
+(3) **d_lon, d_lat**: the size of the grid after segmentation.<br>
+(4) **network_data**: the dictionary form of the network data for simulating networks, the keys are as follows.<br>
+- *"name"*: the name of the network to be simulated
+- *"supplyname", "tranmissionname", "demandname"*: the name of the supply, tranmission and demand nodes
+- *"nodenum", "supplynum", "trannum", "demandnum"*: the number of facilities in the whole system, supply, tranmission and demand facilities<br>
+
+(5) **degree_sequence**: the prescribed degree sequence, a list of node degree values obtained by empirical knowledge or learned from other real infrastructure networks<br>
+(6) **depend_num**: a parameter specifying how many facilities does the specific facility demand resources from<br>
+(7) **internetwork_data**: the dictionary form of the internetwork data for simulating interdependencies, the keys are as follows.<br>
+- *"name"*: the name of the interdependency
+- *"network1"*: the network that provide resources to the other network in the interdependency. This is the **network** object initialized beforehand.
+- *"network2"*: the network depending on resources from the other network in the interdependency. This is the **network** object initialized beforehand.
+- *"dependnum"*: the number of facilities in the network that are relied on by each of the facilities in the other network in the interdependency.
+### Flowchart
+
+
+## Tutorial
+## Case Study
 (1) The area where the infrastructure systems are to be set up: geographical boundary (lat, lon), the population distribution (in tract sense), the real infrastructure system to be simulated (degree distribution, the number of different type of facilities)
 ## 3. Tutorial
 (1) The interdependent system to be simulated: the topology and the flow
